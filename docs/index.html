@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Coding Agent project overview">
+<title>Coding Agent — Project Overview</title>
+<style>
+:root{--bg:#0b0f14;--panel:#121923;--panel2:#172130;--line:#29374a;--text:#eef4fb;--muted:#9aa9bb;--blue:#72a7ff;--green:#74dfbd;--amber:#ffc76b;--red:#ff9393;--r:18px;--max:1180px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 12% 0,rgba(114,167,255,.14),transparent 30rem),radial-gradient(circle at 88% 8%,rgba(116,223,189,.08),transparent 26rem),var(--bg);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(var(--max),calc(100% - 32px));margin:auto}
+header{position:sticky;top:0;z-index:20;background:rgba(11,15,20,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(154,169,187,.13)}
+nav{height:62px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;color:var(--text);font-weight:750;letter-spacing:-.02em}.mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--green));color:#071018;font-weight:900}.links{display:flex;gap:18px}.links a{color:var(--muted);font-size:.9rem}
+.hero{padding:88px 0 52px}.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:rgba(18,25,35,.75);font-size:.84rem;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(116,223,189,.7)}
+h1{font-size:clamp(3rem,7vw,6rem);line-height:.95;letter-spacing:-.055em;max-width:1040px;margin:24px 0}.lead{max-width:880px;font-size:clamp(1.08rem,2vw,1.35rem);color:var(--muted);margin:0}.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}.chip{border:1px solid var(--line);background:var(--panel);padding:8px 11px;border-radius:999px;color:#ccd7e4;font-size:.86rem}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:42px}.metric,.card{background:linear-gradient(180deg,rgba(23,33,48,.96),rgba(18,25,35,.95));border:1px solid var(--line);border-radius:var(--r)}.metric{padding:20px;min-height:132px}.metric b{display:block;font-size:1.35rem;letter-spacing:-.03em;margin-bottom:6px}.metric span,.card p,.desc{color:var(--muted)}
+section{padding:58px 0;scroll-margin-top:72px}.head{display:grid;grid-template-columns:.72fr 1.28fr;gap:36px;align-items:start;margin-bottom:28px}.head h2{margin:0;font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.04em}.head p{margin:4px 0 0;color:var(--muted);font-size:1.04rem}
+.grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{padding:22px}.card h3{margin:0 0 8px;font-size:1.05rem}.kicker{font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;color:var(--green);font-weight:800;margin-bottom:9px}.callout{margin-top:17px;padding:20px;border:1px solid rgba(114,167,255,.4);border-radius:var(--r);background:linear-gradient(135deg,rgba(114,167,255,.1),rgba(116,223,189,.06));color:#dce8f5}
+.arch{display:grid;grid-template-columns:1.1fr 60px .9fr 60px .75fr;gap:10px;align-items:center}.zone{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px;min-height:350px}.zone.on{border-color:rgba(116,223,189,.45)}.zone.dmz{border-color:rgba(255,199,107,.42)}.zone.ext{border-color:rgba(255,147,147,.32)}.zone h3{margin:0 0 14px}.stack{display:grid;gap:8px}.box{background:#0e141c;border:1px solid #314055;border-radius:11px;padding:10px 12px;font-size:.88rem}.box small{display:block;color:var(--muted);margin-top:2px}.arrow{text-align:center;font-size:1.8rem;color:var(--muted)}.arrow small{display:block;font-size:.68rem;line-height:1.2;margin-top:4px}
+.table{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}table{width:100%;min-width:760px;border-collapse:collapse}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{background:#121a25;color:#dce6f3;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}td{color:var(--muted)}td b{color:var(--text)}tr:last-child td{border:0}.ok{color:var(--green);font-weight:700}.warn{color:var(--amber)}
+.agents{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:15px;align-items:center}.alist{display:grid;gap:10px}.agent{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px}.agent b{display:block}.agent span{font-size:.83rem;color:var(--muted)}.super{border:1px solid rgba(114,167,255,.5);border-radius:22px;background:linear-gradient(180deg,rgba(114,167,255,.12),rgba(18,25,35,.96));padding:28px;text-align:center}.super h3{font-size:1.45rem;margin:6px 0 9px}.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.mem{padding:17px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.mem b{display:block;margin-bottom:5px}.mem span{font-size:.86rem;color:var(--muted)}
+.flow{display:grid;grid-template-columns:repeat(7,minmax(125px,1fr));gap:9px;overflow-x:auto;padding-bottom:6px}.step{min-height:120px;border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:14px}.step em{font-style:normal;color:var(--blue);font-size:.75rem;font-weight:800}.step b{display:block;margin-top:7px}.step span{display:block;color:var(--muted);font-size:.82rem;margin-top:4px}
+.timeline{display:grid;gap:11px}.phase{display:grid;grid-template-columns:110px 1fr;gap:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:17px}.phase strong{color:var(--green)}.phase h3{margin:0 0 4px;font-size:1rem}.phase p{margin:0;color:var(--muted)}
+.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.doc{display:block;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:17px;color:var(--text)}.doc:hover{text-decoration:none;border-color:rgba(114,167,255,.55)}.doc span{display:block;color:var(--muted);font-size:.84rem;margin-top:5px}
+footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(--muted);margin-top:30px}
+@media(max-width:980px){.metrics,.memory{grid-template-columns:repeat(2,1fr)}.g3,.docs{grid-template-columns:1fr 1fr}.arch,.agents{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}@media(max-width:700px){.links{display:none}.hero{padding-top:60px}.metrics,.memory,.g2,.g3,.docs{grid-template-columns:1fr}.head{grid-template-columns:1fr;gap:10px}.phase{grid-template-columns:1fr;gap:5px}.wrap{width:min(var(--max),calc(100% - 22px))}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a></div></nav></div></header>
+<main id="top">
+<section class="hero"><div class="wrap">
+<div class="badge"><span class="dot"></span>Architecture evaluation · confidential software engineering</div>
+<h1>Enterprise coding agents without giving up control of code, tools, or state.</h1>
+<p class="lead">The project defines an agentic coding platform for confidential repositories and internal systems. The preferred architecture keeps the complete agent harness on-premises and treats the external LLM as a replaceable, stateless inference service.</p>
+<div class="chips"><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">LiteLLM gateway</span><span class="chip">OPA</span><span class="chip">PostgreSQL + pgvector</span><span class="chip">Pydantic strict</span><span class="chip">HITL</span></div>
+<div class="metrics">
+<div class="metric"><b>On-prem first</b><span>Agent logic, memory, state, traces, credentials and tool execution stay inside the company boundary.</span></div>
+<div class="metric"><b>Provider-agnostic</b><span>The external model sits behind one compatible gateway and can be replaced without redesigning the platform.</span></div>
+<div class="metric"><b>Read-only first</b><span>Start with narrow inspection tools; introduce write capabilities only behind policy and approval.</span></div>
+<div class="metric"><b>Verified loops</b><span>Plan, act, observe and retry — with hard hop, token, timeout, cost and verification limits.</span></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="head"><h2>Project thesis</h2><p>A production coding agent is not an LLM with shell access. It is a controlled software system around the model: context selection, workflow state, tool contracts, policy, memory, validation, observability, recovery and human control. The model is one replaceable component inside that harness.</p></div>
+<div class="grid g3">
+<div class="card"><div class="kicker">Brain</div><h3>LLM</h3><p>Interprets goals, plans steps, chooses tools and synthesizes results. It never owns internal credentials.</p></div>
+<div class="card"><div class="kicker">Control plane</div><h3>Orchestrator</h3><p>LangGraph manages state, conditional routing, parallelism, retries, checkpoints, pauses and resumable execution.</p></div>
+<div class="card"><div class="kicker">Capabilities</div><h3>Tools via MCP</h3><p>Narrow, typed interfaces expose GitLab, CI/CD, OpenShift, databases and internal APIs.</p></div>
+<div class="card"><div class="kicker">Continuity</div><h3>Memory</h3><p>Short-term state, semantic code context, episodic feedback and procedural conventions live outside the model.</p></div>
+<div class="card"><div class="kicker">Trust</div><h3>Supervisor + verifier</h3><p>A supervisor delegates work; an independent verifier checks evidence and invariants before results or writes are accepted.</p></div>
+<div class="card"><div class="kicker">Safety</div><h3>Policy + HITL</h3><p>Deterministic rules remain authoritative. Sensitive actions can pause for human approval.</p></div>
+</div>
+</div></section>
+
+<section id="architecture"><div class="wrap">
+<div class="head"><h2>Preferred reference architecture</h2><p>Variant A keeps the agent runtime on-premises and sends only deliberately selected context to an external inference provider. The LLM Gateway is the single egress path; internal systems are reached locally through MCP and policy enforcement.</p></div>
+<div class="arch">
+<div class="zone on"><h3>Company / OpenShift</h3><div class="stack">
+<div class="box">Agent API<small>FastAPI · authentication · async jobs</small></div>
+<div class="box">Agent Runtime<small>LangGraph · supervisor · verifier · guardrails</small></div>
+<div class="box">Context + Memory<small>Selection · compression · RAG · checkpoints</small></div>
+<div class="box">MCP Tool Servers<small>GitLab · CI/CD · OpenShift · DB · internal APIs</small></div>
+<div class="box">Policy Engine<small>OPA · RBAC · project scope · approvals</small></div>
+<div class="box">Agent Store<small>PostgreSQL · pgvector · episodic memory</small></div>
+<div class="box">Sandbox · Trace Store · Vault<small>Isolation · observability · secrets</small></div>
+</div></div>
+<div class="arrow">→<small>minimized prompts</small></div>
+<div class="zone dmz"><h3>Controlled egress / DMZ</h3><div class="stack">
+<div class="box">LLM Gateway<small>OpenAI-compatible routing layer</small></div>
+<div class="box">Redaction<small>Secrets · sensitive identifiers · policy</small></div>
+<div class="box">Budgets<small>Per task · user · day · hard stops</small></div>
+<div class="box">Reliability<small>Retries · circuit breaker · idempotency · fallback</small></div>
+<div class="box">Audit metadata<small>Outbound request metadata stays on-prem</small></div>
+</div></div>
+<div class="arrow">→<small>mTLS / HTTPS</small></div>
+<div class="zone ext"><h3>External provider</h3><div class="stack">
+<div class="box">LLM inference<small>EU region where required</small></div>
+<div class="box">Stateless processing<small>Zero retention / no training contract target</small></div>
+<div class="box">Replaceable endpoint<small>Managed API or rented GPU + vLLM</small></div>
+</div></div>
+</div>
+<div class="callout"><b>Boundary rule:</b> repositories, checkpoints, memory, RAG indexes, traces, secrets and tool credentials stay on-premises. Only selected prompt context and model completions cross the external boundary in Variant A.</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="head"><h2>Deployment variants</h2><p>Both variants use the same agent concepts, but move the trust boundary to a different place.</p></div>
+<div class="table"><table>
+<thead><tr><th>Dimension</th><th>Variant A — Remote inference</th><th>Variant B — Cloud agent + cloud LLM</th></tr></thead>
+<tbody>
+<tr><td><b>Agent runtime</b></td><td class="ok">On-prem</td><td>Cloud</td></tr>
+<tr><td><b>State / memory / traces</b></td><td class="ok">On-prem</td><td>Cloud</td></tr>
+<tr><td><b>Tools</b></td><td>Local MCP servers</td><td>On-prem MCP Gateway exposed to cloud agent</td></tr>
+<tr><td><b>LLM</b></td><td>External</td><td>External / same cloud</td></tr>
+<tr><td><b>Primary security boundary</b></td><td>LLM Gateway / egress</td><td>MCP Gateway / ingress</td></tr>
+<tr><td><b>What leaves the company</b></td><td>Minimized prompt context</td><td>Prompt context, agent state and filtered tool results</td></tr>
+<tr><td><b>Data sovereignty</b></td><td class="ok">Maximum of the two variants</td><td class="warn">Reduced</td></tr>
+</tbody></table></div>
+</div></section>
+
+<section id="agents"><div class="wrap">
+<div class="head"><h2>Multi-agent model</h2><p>Multiple agents are useful only when they separate responsibilities, context, tools or permissions. For coding workflows, the current design favors a supervisor pattern over an uncontrolled swarm because validation matters more than minimizing handoffs.</p></div>
+<div class="agents">
+<div class="alist"><div class="agent"><b>Code Agent</b><span>Repository analysis and implementation.</span></div><div class="agent"><b>Test Agent</b><span>Test execution, failure analysis and edge cases.</span></div><div class="agent"><b>Security Agent</b><span>Adversarial review and security findings.</span></div></div>
+<div class="super"><div class="kicker">Control hierarchy</div><h3>Supervisor → Specialists → Verifier</h3><p class="desc">Specialists can fan out in parallel. Findings are merged, deduplicated and checked by an independent verifier before they reach the developer or trigger a write action.</p></div>
+<div class="alist"><div class="agent"><b>Quality / Architecture Agent</b><span>Conventions, ADRs and design consistency.</span></div><div class="agent"><b>Documentation Agent</b><span>Docs, comments and API consistency.</span></div><div class="agent"><b>Verifier</b><span>Evidence, invariants and final acceptance.</span></div></div>
+</div>
+<div class="memory"><div class="mem"><b>Short-term</b><span>Graph state, messages and checkpoints.</span></div><div class="mem"><b>Semantic</b><span>Relevant code chunks and relationships via vector search.</span></div><div class="mem"><b>Episodic</b><span>Past tasks, review corrections and accepted feedback.</span></div><div class="mem"><b>Procedural</b><span>Team rules, ADRs, repository conventions and operating constraints.</span></div></div>
+</div></section>
+
+<section id="workflows"><div class="wrap">
+<div class="head"><h2>Where agentic workflows pay off</h2><p>The target is not just “chat with the codebase.” The platform is most valuable when work needs state, multiple tools, branching, retries, parallel specialists, verification and controlled approval.</p></div>
+<div class="grid g3">
+<div class="card"><div class="kicker">Engineering</div><h3>Feature implementation</h3><p>Analyze repository → plan → modify → test → static/security checks → correct → verify.</p></div>
+<div class="card"><div class="kicker">Review</div><h3>Selective PR review</h3><p>Parallel security, quality, testing and documentation review with evidence, deduplication and final verification.</p></div>
+<div class="card"><div class="kicker">CI/CD</div><h3>Failure investigation</h3><p>Classify failure → inspect logs → propose fix → apply in sandbox → rerun → repeat when needed.</p></div>
+<div class="card"><div class="kicker">Security</div><h3>Vulnerability triage</h3><p>Determine reachability and project relevance before creating and validating remediation.</p></div>
+<div class="card"><div class="kicker">Operations</div><h3>Incident investigation</h3><p>Observe → hypothesize → diagnose → approve risky action → remediate → verify → document.</p></div>
+<div class="card"><div class="kicker">Data</div><h3>Controlled data workflows</h3><p>Inspect schema → build validated read-only query → execute → refine → answer with evidence.</p></div>
+</div>
+<div class="flow" style="margin-top:20px">
+<div class="step"><em>01</em><b>Goal</b><span>Developer states outcome.</span></div>
+<div class="step"><em>02</em><b>Context</b><span>Retrieve only relevant code and memory.</span></div>
+<div class="step"><em>03</em><b>Plan</b><span>Supervisor decomposes and routes.</span></div>
+<div class="step"><em>04</em><b>Act</b><span>Specialists use narrow tools.</span></div>
+<div class="step"><em>05</em><b>Observe</b><span>Results update structured state.</span></div>
+<div class="step"><em>06</em><b>Verify</b><span>Evidence determines next route.</span></div>
+<div class="step"><em>07</em><b>Finish / approve</b><span>Return result or pause for write.</span></div>
+</div>
+</div></section>
+
+<section id="security"><div class="wrap">
+<div class="head"><h2>Security and production invariants</h2><p>Model output is treated as untrusted input. Deterministic software controls what the agent may see, call, change and persist.</p></div>
+<div class="grid g2">
+<div class="card"><div class="kicker">Tool design</div><h3>Narrow and typed</h3><p>Prefer scoped functions such as <code>read_repository_file(project_id, path)</code>, <code>run_tests(project_id)</code> and <code>get_pod_logs(namespace, pod)</code>. Arbitrary shell, raw SQL and unrestricted SSH are excluded by default.</p></div>
+<div class="card"><div class="kicker">Validation</div><h3>Pydantic strict schemas</h3><p>Structured model output that drives downstream logic must pass explicit type and business validation before it can affect state or tools.</p></div>
+<div class="card"><div class="kicker">Autonomy</div><h3>Bounded loops</h3><p>Hard limits on hops, tokens, time and cost. Retries use circuit breakers and idempotency to prevent uncontrolled execution.</p></div>
+<div class="card"><div class="kicker">Writes</div><h3>Human-in-the-loop</h3><p>Reads can be automatic. Merge requests, production changes, database writes and other sensitive actions can pause for approval.</p></div>
+<div class="card"><div class="kicker">Execution</div><h3>Sandboxed code and tests</h3><p>Generated code executes in ephemeral, network-restricted environments rather than on shared production hosts.</p></div>
+<div class="card"><div class="kicker">Observability</div><h3>Self-hosted event spine</h3><p>Trace retrieval, tool calls, model usage, latency, cost and state transitions without sending full sensitive traces to a SaaS system.</p></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="head"><h2>Context and quality engineering</h2><p>Better models do not compensate for weak context. Repository rules, architectural decisions, tool descriptions and acceptance criteria are first-class engineering artifacts.</p></div>
+<div class="grid g3">
+<div class="card"><h3>Context minimization</h3><p>Retrieve the smallest relevant code and procedural context instead of sending whole repositories.</p></div>
+<div class="card"><h3>Versioned instructions</h3><p>System prompts, tool docstrings, project conventions and ADRs are reviewed and versioned like code.</p></div>
+<div class="card"><h3>Evidence over claims</h3><p>“Tests pass” is only accepted when the platform actually reruns authorized verification.</p></div>
+<div class="card"><h3>Selectivity over noise</h3><p>Code review should optimize for high-confidence, high-value findings rather than comment volume.</p></div>
+<div class="card"><h3>Code-based evals first</h3><p>Use deterministic tests wherever ground truth exists; use model judging only for genuinely open-ended quality dimensions.</p></div>
+<div class="card"><h3>Framework abstraction</h3><p>Keep orchestration behind Run / Resume / GetState-style interfaces so LangGraph is replaceable if requirements change.</p></div>
+</div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+<div class="head"><h2>Proposed implementation path</h2><p>Increase autonomy only after evidence, observability and policy controls are proven.</p></div>
+<div class="timeline">
+<div class="phase"><strong>Phase 0</strong><div><h3>Architecture and contracts</h3><p>Finalize provider requirements, data classes, trust boundaries, tool contracts, identity model and ownership.</p></div></div>
+<div class="phase"><strong>Phase 1</strong><div><h3>Read-only coding assistant</h3><p>Repository inspection, search, CI/log analysis and internal knowledge access. No write-capable tools.</p></div></div>
+<div class="phase"><strong>Phase 2</strong><div><h3>Verified engineering workflows</h3><p>Feature planning, sandboxed code changes, tests, selective PR review, verifier and complete tracing.</p></div></div>
+<div class="phase"><strong>Phase 3</strong><div><h3>Controlled write actions</h3><p>Feature branches and merge-request creation behind OPA policies, approval gates and project-level RBAC.</p></div></div>
+<div class="phase"><strong>Phase 4</strong><div><h3>Scale and provider resilience</h3><p>Fallback providers, budgets, parallel workers, eval suites and continuous feedback into episodic memory.</p></div></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<div class="head"><h2>Project documents</h2><p>The page is the executive overview. The repository documents contain the detailed architecture and research material.</p></div>
+<div class="docs">
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-inference-agent-on-prem.md"><b>Remote inference — agent on-prem</b><span>Preferred architecture, C4 views, trust zones, gateway, tools and data classes.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/cloud-agent-cloud-llm"><b>Cloud agent + cloud LLM</b><span>Alternative deployment with an on-prem MCP Gateway as the primary boundary.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/agentic-workflows.md"><b>Agentic workflows</b><span>Feature delivery, PR review, CI/CD, security, incidents, data and HITL patterns.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/sources/code-review-mas.md"><b>Multi-agent code review</b><span>Fan-out/fan-in review, memory, verification, observability and selectivity.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/sources/mas-reference.md"><b>MAS reference</b><span>Supervisor vs swarm, MCP, evaluation and operating rules.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/tree/main/sources"><b>All sources</b><span>Supporting architecture, agent, deployment and engineering notes.</span></a>
+</div>
+</div></section>
+</main>
+<footer><div class="wrap"><b style="color:var(--text)">Coding Agent</b><div style="margin-top:6px">Current status: architecture evaluation. Preferred direction: remote inference with the agent runtime and control plane on-premises.</div></div></footer>
+</body></html>
