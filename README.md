@@ -22,8 +22,6 @@ flowchart TB
 
     classDef person fill:#08427b,stroke:#052e56,color:#fff
     classDef system fill:#1168bd,stroke:#0b4884,color:#fff
-    classDef container fill:#438dd5,stroke:#2e6295,color:#fff
-    classDef component fill:#85bbf0,stroke:#5d82a8,color:#000
     classDef ext fill:#8a8a8a,stroke:#6b6b6b,color:#fff
     class dev person
     class platform system
@@ -42,32 +40,30 @@ The central question is **where the agent runtime lives** – this defines the t
 | Security boundary | LLM Gateway (egress) | MCP Gateway (ingress) |
 | Data sovereignty | Maximum | Reduced |
 
+## Project Structure
+
+```text
+coding-agent/
+├── README.md
+├── agentic-workflows.md
+├── remote-inference-agent-on-prem.md
+├── cloud-agent-cloud-llm
+└── sources/
+    └── README.md
+```
+
 ## Documents
 
-### Architecture
-
 | Document | Content |
 |---|---|
-| [Variant A – Remote Inference](infrastructure/variant_a_remote_inference.md) | Agent on-prem, inference external. C4 views (context, container, component, deployment), principles, data classes. |
-| [Variant B – Cloud Agent Runtime](infrastructure/variant_b_cloud_agent_runtime.md) | Agent + LLM in the cloud, internal systems via MCP Gateway. |
+| [Agentic Workflows](agentic-workflows.md) | Workflows that benefit from agentic architecture, including state, branching, parallelism and human-in-the-loop. |
+| [Remote Inference – Agent On-Prem](remote-inference-agent-on-prem.md) | Agent runtime on-premises with external LLM inference. |
+| [Cloud Agent + Cloud LLM](cloud-agent-cloud-llm) | Agent runtime and LLM hosted externally, with controlled access to internal systems. |
 
-### Inference Providers
+## Sources
 
-| Document | Content |
-|---|---|
-| [Mistral Enterprise](infrastructure/mistral_enterprise_confidential_coding_agent.md) | Contracts, zero data retention, GDPR/DPA, residency, recommended Company architecture. |
-| [Azure AI Foundry](infrastructure/providers/azure_ai_foundry_confidential_coding_agent.md) | Data protection position, network setup, contract stack, review checklist. |
-
-### Workflows
-
-| Document | Content |
-|---|---|
-| [Agentic Workflows with LangGraph](workflows/summary.md) | When agentic workflows pay off; state, branching, parallelism, HITL. |
-
-### Sources
-
-[.sources/](.sources/) – background material (German) on agent anatomy, multi-agent patterns, LangGraph and production deployment. Input only, not curated.
+The [`sources/`](sources/) folder contains supporting documents, vendor material, research notes and other source material used during the architecture evaluation.
 
 ## Status
 
-Architecture evaluation – no implementation yet. Current focus: **Variant A**.
+Architecture evaluation – no implementation yet. Current focus: **Variant A – Remote Inference with the agent runtime on-premises**.
