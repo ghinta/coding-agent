@@ -1,0 +1,239 @@
+# Option B – Cloud Agent Runtime and Cloud LLM
+
+## Goal
+
+Run **Agent + Orchestrator + LLM** at Koyeb or a similar provider.
+Keep internal systems on-prem.
+Access them through a controlled **MCP Gateway**.
+
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph CLOUD["Koyeb / Cloud"]
+        API["Agent API"]
+        AGENT["Coding Agent"]
+        ORCH["Agent Orchestrator"]
+        MEM["Agent Memory / State"]
+        CTX["Context Manager"]
+        RAG["Knowledge / Vector Store"]
+        MCPCLIENT["MCP Client"]
+        GW["LLM Gateway"]
+        VLLM["vLLM"]
+        MODEL["Qwen / Devstral / Other LLM"]
+        GPU["GPU"]
+
+        API --> AGENT
+        AGENT --> ORCH
+        ORCH --> MEM
+        ORCH --> CTX
+        CTX --> RAG
+        ORCH --> MCPCLIENT
+        ORCH --> GW
+        GW --> VLLM
+        VLLM --> MODEL --> GPU
+    end
+
+    subgraph Company["Company / On-Prem"]
+        DEV["Developer / VS Code"]
+        MCPGW["MCP Gateway"]
+        POLICY["Policy / RBAC / Approval"]
+        AUDIT["Audit Logging"]
+
+        GIT["GitLab"]
+        DB["Databases"]
+        OCP["OpenShift / Kubernetes"]
+        SHELL["Build / Test Runtime"]
+        APIINT["Internal APIs"]
+        FILES["Project Files"]
+
+        MCPGW --> POLICY
+        POLICY --> GIT
+        POLICY --> DB
+        POLICY --> OCP
+        POLICY --> SHELL
+        POLICY --> APIINT
+        POLICY --> FILES
+        POLICY --> AUDIT
+    end
+
+    DEV -->|"HTTPS"| API
+    MCPCLIENT -->|"TLS / MCP"| MCPGW
+    MCPGW -->|"filtered result"| MCPCLIENT
+```
+
+## Cloud Components
+
+- Agent API
+- Coding Agent
+- Agent Orchestrator
+- Multi-Agent Routing
+- Agent Memory / State
+- Context Manager
+- optional RAG / Vector Database
+- MCP Client
+- LLM Gateway
+- vLLM
+- LLM
+- GPU
+- optional workers / queues / cache
+- optional temporary agent sandboxes
+
+## On-Prem Components
+
+- GitLab
+- Repositories
+- OpenShift / Kubernetes
+- Databases
+- Internal APIs
+- Project files
+- Build / test environments
+- Internal secrets
+- MCP Gateway
+- Policy Engine
+- RBAC / approval
+- Audit Logging
+
+## Data Flow
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer / VS Code
+    participant Agent as Agent @ Koyeb
+    participant LLM as vLLM @ Koyeb
+    participant MCP as MCP Gateway On-Prem
+    participant Sys as Internal Systems
+
+    Dev->>Agent: Coding task
+    Agent->>LLM: Plan request
+    LLM-->>Agent: Plan / tool request
+
+    Agent->>MCP: MCP tool request
+    MCP->>MCP: Auth + RBAC + policy check
+    MCP->>Sys: Run allowed action
+    Sys-->>MCP: Result
+    MCP->>MCP: Filter / redact result
+    MCP-->>Agent: Tool result
+
+    Agent->>LLM: Updated context
+    LLM-->>Agent: Next action / final output
+    Agent-->>Dev: Result
+```
+
+## Trust Boundary
+
+```mermaid
+flowchart LR
+    subgraph CLOUD["External / Cloud"]
+        A["Agent"]
+        O["Orchestrator"]
+        M["Memory"]
+        R["RAG"]
+        L["LLM"]
+    end
+
+    subgraph BOUNDARY["Controlled Boundary"]
+        G["MCP Gateway"]
+        P["Policy Engine"]
+    end
+
+    subgraph INTERNAL["Company Internal"]
+        GIT["GitLab"]
+        DB["Database"]
+        OCP["OpenShift"]
+        SH["Build / Test Runtime"]
+    end
+
+    A --> G
+    G --> P
+    P --> GIT
+    P --> DB
+    P --> OCP
+    P --> SH
+```
+
+## MCP Gateway
+
+The MCP Gateway is the main security boundary.
+
+Required controls:
+
+- strong authentication
+- TLS / mTLS
+- RBAC
+- tool allowlist
+- input validation
+- policy checks
+- rate limits
+- project scoping
+- repository scoping
+- optional human approval
+- output filtering
+- secret redaction
+- audit logging
+
+```mermaid
+flowchart TB
+    REQ["Cloud Agent Request"]
+    AUTH["Authentication"]
+    RBAC["RBAC"]
+    POLICY["Policy Check"]
+    APPROVAL["Optional Human Approval"]
+    EXEC["Local Tool Execution"]
+    FILTER["Output Filtering"]
+    RESP["Return Result"]
+
+    REQ --> AUTH --> RBAC --> POLICY --> APPROVAL --> EXEC --> FILTER --> RESP
+```
+
+## Tool Design
+
+Prefer narrow tools.
+
+```text
+GOOD
+--------------------------------
+run_tests(project_id)
+get_git_diff(project_id)
+read_repository_file(project_id, path)
+get_pod_logs(namespace, pod)
+query_database_readonly(query_id, params)
+create_feature_branch(project_id)
+
+BAD
+--------------------------------
+run_arbitrary_shell(command)
+execute_raw_sql(sql)
+ssh(host, command)
+access_internal_network(host, port)
+```
+
+## Network Model
+
+```mermaid
+flowchart LR
+    CLOUD["Koyeb Agent Runtime"]
+    EDGE["Company Edge / API Gateway"]
+    MCP["MCP Gateway"]
+    INT["Internal Systems"]
+
+    CLOUD -->|"TLS / mTLS"| EDGE
+    EDGE --> MCP
+    MCP --> INT
+```
+
+## Main Advantages
+
+- Less agent infrastructure on-prem
+- Easier central scaling
+- Agent and LLM are close together
+- Easier multi-agent deployment
+- Cloud workers can be scaled independently
+
+## Main Risks
+
+- Agent state is outside the company network
+- More code and context may leave the company network
+- Cloud Agent needs controlled access back to on-prem systems
+- MCP Gateway becomes security-critical
+- More provider dependency than Option A
