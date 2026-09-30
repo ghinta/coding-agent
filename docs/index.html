@@ -16,7 +16,7 @@ h1{font-size:clamp(3rem,7vw,6rem);line-height:.95;letter-spacing:-.055em;max-wid
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:42px}.metric,.card{background:linear-gradient(180deg,rgba(23,33,48,.96),rgba(18,25,35,.95));border:1px solid var(--line);border-radius:var(--r)}.metric{padding:20px;min-height:132px}.metric b{display:block;font-size:1.35rem;letter-spacing:-.03em;margin-bottom:6px}.metric span,.card p,.desc{color:var(--muted)}
 section{padding:58px 0;scroll-margin-top:72px}.head{display:grid;grid-template-columns:.72fr 1.28fr;gap:36px;align-items:start;margin-bottom:28px}.head h2{margin:0;font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.04em}.head p{margin:4px 0 0;color:var(--muted);font-size:1.04rem}
 .grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.card{padding:22px}.card h3{margin:0 0 8px;font-size:1.05rem}.kicker{font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;color:var(--green);font-weight:800;margin-bottom:9px}.callout{margin-top:17px;padding:20px;border:1px solid rgba(114,167,255,.4);border-radius:var(--r);background:linear-gradient(135deg,rgba(114,167,255,.1),rgba(116,223,189,.06));color:#dce8f5}
-.arch{display:grid;grid-template-columns:1.1fr 60px .9fr 60px .75fr;gap:10px;align-items:center}.zone{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px;min-height:350px}.zone.on{border-color:rgba(116,223,189,.45)}.zone.dmz{border-color:rgba(255,199,107,.42)}.zone.ext{border-color:rgba(255,147,147,.32)}.zone h3{margin:0 0 14px}.stack{display:grid;gap:8px}.box{background:#0e141c;border:1px solid #314055;border-radius:11px;padding:10px 12px;font-size:.88rem}.box small{display:block;color:var(--muted);margin-top:2px}.arrow{text-align:center;font-size:1.8rem;color:var(--muted)}.arrow small{display:block;font-size:.68rem;line-height:1.2;margin-top:4px}
+.arch{display:grid;grid-template-columns:1.1fr 60px .9fr 60px .75fr;gap:10px;align-items:center}.zone{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px;min-height:350px}.zone.on{border-color:rgba(116,223,189,.45)}.zone.dmz{border-color:rgba(255,199,107,.42)}.zone.ext{border-color:rgba(255,147,147,.32)}.zone h3{margin:0 0 14px}.stack{display:grid;gap:8px}.box{background:#0e141c;border:1px solid #314055;border-radius:11px;padding:10px 12px;font-size:.88rem}.box small{display:block;color:var(--muted);margin-top:2px}.policy-entry{border-color:rgba(255,199,107,.62);background:rgba(255,199,107,.07)}.policy-entry b{color:var(--amber)}.policy-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.policy-col{border:1px solid #314055;border-radius:9px;padding:9px;background:#0b1118}.policy-col strong{display:block;font-size:.78rem;margin-bottom:5px}.policy-col span{display:block;font-size:.76rem;color:var(--muted);line-height:1.45}.policy-col.allow strong{color:var(--green)}.policy-col.deny strong{color:var(--red)}.arrow{text-align:center;font-size:1.8rem;color:var(--muted)}.arrow small{display:block;font-size:.68rem;line-height:1.2;margin-top:4px}
 .table{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}table{width:100%;min-width:760px;border-collapse:collapse}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{background:#121a25;color:#dce6f3;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}td{color:var(--muted)}td b{color:var(--text)}tr:last-child td{border:0}.ok{color:var(--green);font-weight:700}.warn{color:var(--amber)}
 .agents{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:15px;align-items:center}.alist{display:grid;gap:10px}.agent{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px}.agent b{display:block}.agent span{font-size:.83rem;color:var(--muted)}.super{border:1px solid rgba(114,167,255,.5);border-radius:22px;background:linear-gradient(180deg,rgba(114,167,255,.12),rgba(18,25,35,.96));padding:28px;text-align:center}.super h3{font-size:1.45rem;margin:6px 0 9px}.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.mem{padding:17px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.mem b{display:block;margin-bottom:5px}.mem span{font-size:.86rem;color:var(--muted)}
 .flow{display:grid;grid-template-columns:repeat(7,minmax(125px,1fr));gap:9px;overflow-x:auto;padding-bottom:6px}.step{min-height:120px;border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:14px}.step em{font-style:normal;color:var(--blue);font-size:.75rem;font-weight:800}.step b{display:block;margin-top:7px}.step span{display:block;color:var(--muted);font-size:.82rem;margin-top:4px}
@@ -27,7 +27,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </style>
 </head>
 <body>
-<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
+<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#openshell">OpenShell</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
 <main id="top">
 <section class="hero"><div class="wrap">
 <div class="badge"><span class="dot"></span>Architecture evaluation · confidential software engineering</div>
@@ -84,6 +84,92 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="callout"><b>Boundary rule:</b> repositories, checkpoints, memory, RAG indexes, traces, secrets and tool credentials stay on-premises. Only selected prompt context and model completions cross the external boundary in Variant A.</div>
 </div></section>
 
+
+<section id="openshell"><div class="wrap">
+<div class="head"><h2><a href="https://docs.nvidia.com/openshell/latest/about/overview">NVIDIA OpenShell</a> — ready-to-go option</h2><p>OpenShell can provide the secured on-prem execution boundary instead of us building every sandbox, credential and egress control ourselves. Our inference strategy does not change: local vLLM is optional and capacity-limited; heavy workloads continue to use approved external providers such as Koyeb, Mistral, Azure or other enterprise endpoints.</p></div>
+
+<div class="grid g3">
+<div class="card"><div class="kicker">Control plane</div><h3>OpenShell Gateway</h3><p>Owns sandbox lifecycle, policy and settings delivery, provider configuration, authorization and inference routing.</p></div>
+<div class="card"><div class="kicker">Security boundary</div><h3>Supervisor + sandbox</h3><p>The agent runs as an untrusted process. Filesystem, process identity, network egress and runtime credentials are enforced outside the agent process.</p></div>
+<div class="card"><div class="kicker">Inference</div><h3>Hybrid, external for heavy loads</h3><p>Small or bounded models may run locally via vLLM. Large coding models and peak workloads stay on approved remote inference providers.</p></div>
+</div>
+
+<div class="arch" style="margin-top:20px">
+<div class="zone on"><h3>Company / OpenShift</h3><div class="stack">
+<div class="box">Developer / VS Code<small>Starts and interacts with the coding-agent workload</small></div>
+<div class="box">OpenShell Gateway<small>Identity · RBAC · policies · provider configuration · credentials</small></div>
+
+<div class="box policy-entry"><b>Sandbox Entry Policy</b><small>Evaluated before the agent receives access to capabilities or network destinations.</small>
+<div class="policy-list">
+<div class="policy-col allow"><strong>Whitelist</strong>
+<span>✓ GitLab</span>
+<span>✓ Package Registry</span>
+<span>✓ Internal Knowledge Base</span>
+<span>✓ CI / Test APIs</span>
+<span>✓ Approved DB access via scoped tool / MCP</span>
+<span>✓ Approved LLM endpoint via inference routing</span>
+</div>
+<div class="policy-col deny"><strong>Forbidden actions</strong>
+<span>✗ Arbitrary Internet / unknown APIs</span>
+<span>✗ Direct credential or secret access</span>
+<span>✗ Cloud metadata endpoints</span>
+<span>✗ Privilege escalation / sudo / setuid</span>
+<span>✗ Access outside declared filesystem paths</span>
+<span>✗ Direct production writes unless explicitly approved</span>
+<span>✗ Bypassing supervisor / direct egress</span>
+</div>
+</div>
+</div>
+
+<div class="box">Isolated Coding-Agent Sandbox<small>Claude Code / Cline / Codex-like Agent</small></div>
+<div class="box">OpenShell Supervisor<small>Process · filesystem · network · credential · inference enforcement</small></div>
+<div class="box">Internal capabilities<small>GitLab · package registry · DB · knowledge · CI/test tools</small></div>
+<div class="box">Optional local inference<small>vLLM for smaller / bounded workloads where GPU capacity exists</small></div>
+</div></div>
+<div class="arrow">→<small>approved inference only</small></div>
+<div class="zone dmz"><h3>Controlled egress</h3><div class="stack">
+<div class="box">OpenShell inference routing<small>Approved endpoint and provider profile only</small></div>
+<div class="box">Provider credentials<small>Kept outside the agent and injected only for permitted destinations</small></div>
+<div class="box">Network policy<small>Deny by default · explicit destinations, ports and request rules</small></div>
+<div class="box">Optional enterprise LLM gateway<small>Additional redaction · quotas · fallback · cost control · audit</small></div>
+</div></div>
+<div class="arrow">→<small>HTTPS / provider API</small></div>
+<div class="zone ext"><h3>Heavy inference providers</h3><div class="stack">
+<div class="box">Koyeb<small>Hosted inference / rented GPU + vLLM where appropriate</small></div>
+<div class="box">Mistral<small>Managed enterprise inference</small></div>
+<div class="box">Azure<small>Managed enterprise inference</small></div>
+<div class="box">Other approved providers<small>Replaceable through provider / routing configuration</small></div>
+</div></div>
+</div>
+
+<div class="callout"><b>Entry-point rule:</b> the sandbox starts from an explicit allowlist. Anything not declared is denied by default. The agent never receives unrestricted network access or raw provider credentials.</div>
+
+<div class="head" style="margin-top:44px"><h2>Custom platform vs. OpenShell</h2><p>The architectural objective stays the same. The main difference is how much of the execution-security layer we implement and operate ourselves.</p></div>
+<div class="table"><table>
+<thead><tr><th>Area</th><th>Current custom approach</th><th>OpenShell option</th></tr></thead>
+<tbody>
+<tr><td><b>Agent orchestration</b></td><td>LangGraph supervisor, specialists, verifier and custom workflow state.</td><td>Can remain custom. OpenShell secures the execution boundary rather than replacing higher-level workflow orchestration.</td></tr>
+<tr><td><b>Sandbox isolation</b></td><td>Build and operate ephemeral restricted runners ourselves.</td><td>Integrated sandbox + supervisor with process, filesystem and network controls.</td></tr>
+<tr><td><b>Sandbox entry policy</b></td><td>Custom OPA / application checks, NetworkPolicy and runtime configuration.</td><td>Explicit policy defines allowed files, processes, network destinations, API rules and credential paths before the agent receives access.</td></tr>
+<tr><td><b>Network egress</b></td><td>OpenShift NetworkPolicy, firewall, LLM Gateway and custom allowlists.</td><td>Agent egress is mediated by OpenShell policy and the supervisor; OpenShift NetworkPolicy remains an outer fence.</td></tr>
+<tr><td><b>Credential handling</b></td><td>Vault / Kubernetes Secrets + custom short-lived injection into tools and gateways.</td><td>Credentials remain outside the untrusted agent and are supplied only where policy permits.</td></tr>
+<tr><td><b>LLM routing</b></td><td>LiteLLM or equivalent gateway for provider abstraction, fallback, budgets and redaction.</td><td>OpenShell provides inference routing and provider credential mediation. A separate LLM gateway can remain for advanced routing, budgets, fallback and redaction.</td></tr>
+<tr><td><b>Internal tools</b></td><td>MCP servers expose narrow typed capabilities for GitLab, CI/CD, OpenShift, DBs and APIs.</td><td>MCP can remain unchanged. OpenShell adds a stronger execution and network boundary around the agent calling those tools.</td></tr>
+<tr><td><b>Policy</b></td><td>OPA + application policy + OpenShift controls.</td><td>OpenShell adds declarative runtime policy; OPA can still cover business authorization and tool-level rules.</td></tr>
+<tr><td><b>State / memory / RAG</b></td><td>PostgreSQL + pgvector and application-managed checkpoints / memory.</td><td>Still application-owned. OpenShell does not replace semantic memory, RAG, checkpoints or domain state.</td></tr>
+<tr><td><b>Local models</b></td><td>Optional vLLM if suitable GPU capacity is available.</td><td>Same: local inference is optional and bounded, not the assumed path for heavy workloads.</td></tr>
+<tr><td><b>Heavy inference</b></td><td class="ok">External Koyeb / Mistral / Azure / other approved providers.</td><td class="ok">Same model. OpenShell controls the path and keeps provider credentials away from the agent.</td></tr>
+<tr><td><b>Implementation effort</b></td><td>Higher: more custom sandbox, credential and network-security plumbing.</td><td>Lower for the execution-security layer, with OpenShell integration and qualification still required.</td></tr>
+<tr><td><b>Flexibility</b></td><td>Maximum control over every platform component.</td><td>More opinionated runtime boundary, while orchestration, MCP, memory and provider strategy remain replaceable.</td></tr>
+</tbody></table></div>
+
+<div class="grid g2" style="margin-top:20px">
+<div class="card"><div class="kicker">Keep from our design</div><h3>Application and workflow layer</h3><p>LangGraph orchestration, MCP tool contracts, verifier, RAG/context selection, PostgreSQL + pgvector, HITL, business authorization, observability and provider selection remain relevant.</p></div>
+<div class="card"><div class="kicker">Potentially replace</div><h3>Execution security plumbing</h3><p>Custom sandbox lifecycle, low-level process isolation, much of network mediation, provider credential injection and agent-specific runtime policy can move to OpenShell.</p></div>
+</div>
+
+<div class="callout"><b>Evaluation target:</b> OpenShell is a ready-to-go security/runtime option for Variant A, not a new cloud architecture. Preferred operating model: <b>agent runtime on-prem + external inference for heavy workloads</b>, with optional local vLLM only where capacity and model size make it practical.</div>
+</div></section>
 
 <section id="c4"><div class="wrap">
 <div class="head"><h2>C4 architecture model</h2><p>The preferred setup is described at four levels. Each view adds detail while preserving the same trust boundary: the agent platform remains on-premises and only minimized inference traffic leaves through the LLM Gateway.</p></div>
