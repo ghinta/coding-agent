@@ -60,7 +60,7 @@ coding-agent/
 | [Agentic Workflows](agentic-workflows.md) | Workflows that benefit from agentic architecture, including state, branching, parallelism and human-in-the-loop. |
 | [Remote Inference – Agent On-Prem](remote-inference-agent-on-prem.md) | Agent runtime on-premises with external LLM inference. |
 | [Cloud Agent + Cloud LLM](cloud-agent-cloud-llm) | Agent runtime and LLM hosted externally, with controlled access to internal systems. |
-| [Remote Development Environments (evaluation)](remote-development-environments.md) | Planned Kubernetes/OpenShift devcontainers, Coder vs. DevPod assessment, OpenShell isolation, KB/MCP access and CLI considerations. |
+| [Remote Development Environments (evaluation)](remote-development-environments.md) | Planned company-managed Kubernetes/OpenShift workspaces; evaluate Coder (workspace lifecycle) and Jetify Devbox (reproducible toolchains), separately or together, with OpenShell, KB/MCP access and deferred CLI. |
 
 ## Sources
 
@@ -70,4 +70,4 @@ The [`sources/`](sources/) folder contains supporting documents, vendor material
 
 Architecture evaluation – no implementation yet. Current focus: **Variant A – Remote Inference with the agent runtime on-premises**.
 
-**Remote development workspaces are a proposed extension, not an implementation.** Coder and DevPod are equal candidates for company-managed Kubernetes / OpenShift. No choice has been made. Third-party PaaS-hosted devcontainers are excluded from this evaluation; external providers remain possible for LLM inference.
+**Remote development workspaces are a proposed extension, not an implementation.** Evaluate Coder for Kubernetes/OpenShift workspace provisioning and Jetify Devbox for reproducible toolchains and Dev Container generation, including their possible combination. These tools cover different layers; no selection has been made. Third-party PaaS-hosted devcontainers are excluded; approved remote LLM inference remains an option.

@@ -1,112 +1,137 @@
 # Remote Development Environments — Evaluation Plan
 
-**Status:** Architecture planning only. **No implementation and no vendor selection.**
+**Status:** Architecture planning only. **No implementation, workspace product selection or CLI commitment.**
 
-## Goal and scope
+## Goals and boundaries
 
-- Provide reproducible remote developer workspaces on **company-managed Kubernetes / OpenShift**, on-premises or in company-controlled Kubernetes infrastructure.
-- Developers connect with **VS Code / SSH** to a workspace defined by the Dev Container specification.
-- Evaluate **Coder and DevPod equally**. Do not select a workspace platform until both have been tested with the same criteria.
-- Retain the existing architecture: agent orchestration, RAG / memory, MCP tooling, GitLab, CI and sensitive state remain under company control; only approved LLM inference uses external providers.
-- **Out of scope:** Devcontainers hosted directly on a third-party PaaS; implementing a custom CLI; production deployment in this planning phase.
+- Provide secure, reproducible **remote development workspaces on company-managed Kubernetes / OpenShift** (on-premises or company-controlled infrastructure).
+- Developers use **VS Code / SSH** to work with source code, language runtimes, testing and approved internal services.
+- **Evaluate Coder and Jetify Devbox** without selecting either. They solve different layers and may be combined.
+- Retain the existing architecture: confidential source, agent orchestration, RAG/knowledge, memory, MCP tooling, GitLab, CI and sensitive state remain under company control. Approved remote LLM inference is accessed through the existing controlled gateway.
+- **Out of scope:** Devcontainers hosted directly on third-party PaaS, hosted Jetify Devspace workspaces, implementing a custom CLI, or deploying a production workspace platform during planning.
 
-## Proposed architecture (C4-style deployment view)
+## Key architectural distinction
 
-~~~mermaid
+| Product | Primary role | Does not provide on its own |
+|---|---|---|
+| [Coder](https://coder.com/docs/user-guides/devcontainers) | Self-hosted workspace control plane: templates, provisioning, access and lifecycle | Agent security isolation (OpenShell is separate); standardized project packages without a chosen environment definition |
+| [Jetify Devbox](https://www.jetify.com/devbox) | Reproducible project-level shell and toolchain using **Nix**, `devbox.json` and `devbox.lock`; can generate a Dockerfile / Dev Container | Remote workspace provisioning, Kubernetes pod lifecycle, central workspace access control or OpenShell sandbox isolation |
+
+**Coder and Devbox are not one-to-one substitutes.** Evaluation tracks: (A) Coder with conventional Dev Containers, (B) Devbox-defined containers with a **separately evaluated Kubernetes workspace lifecycle**, and (C) Coder with Devbox-defined tooling. All tracks stay on company-managed infrastructure. No combination is selected in advance.
+
+## Proposed C4-style deployment view
+
+```mermaid
 flowchart TB
-    dev["Developer<br/>VS Code / SSH / existing CLI"]
-    choice{"Workspace option<br/>Coder OR DevPod<br/>decision pending"}
+    developer["Developer<br/>VS Code / SSH"]
     subgraph company["Company-managed Kubernetes / OpenShift"]
-        workspace["Developer Workspace Pod<br/>Devcontainer / repo / tooling / PVC"]
-        agentApi["Agent API / Orchestrator<br/>existing platform concept"]
+        lifecycle["Workspace lifecycle (TBD)<br/>Coder OR evaluated Kubernetes provisioning"]
+        workspace["Developer Workspace Pod<br/>repository / IDE backend / PVC"]
+        devbox["Optional Jetify Devbox toolchain<br/>devbox.json + devbox.lock<br/>Dev Container / Dockerfile export"]
+        agentApi["Agent API / Orchestrator"]
         osGateway["OpenShell Gateway"]
-        agent["Separate OpenShell Agent Sandbox Pod<br/>restricted untrusted execution"]
-        mcp["Internal MCP Gateway<br/>authorization / audit"]
-        kb["Knowledge Base / RAG / Agent Memory APIs"]
-        systems["GitLab / Package Registry / CI / Test Tools"]
-        llmGateway["Approved LLM Gateway<br/>egress / redaction / budgets"]
+        sandbox["Separate restricted Agent Sandbox Pod"]
+        mcp["Internal MCP Gateway<br/>RBAC / typed tools / audit"]
+        kb["Knowledge Base / RAG / Memory APIs"]
+        systems["GitLab / Package Registry / CI / Test APIs"]
+        inference["Controlled LLM Gateway<br/>redaction / budgets / egress"]
+        nixCache["Approved Nix package cache / build mirror<br/>evaluation requirement"]
     end
-    llm["External LLM inference<br/>approved enterprise endpoint"]
-    dev <-->|"secure IDE tunnel"| workspace
-    dev -->|"choose workspace"| choice
-    choice -->|"provision / connect"| workspace
-    workspace -->|"agent task"| agentApi
-    agentApi -->|"start or access sandbox"| osGateway
-    osGateway --> agent
-    workspace -->|"scoped tool calls"| mcp
-    agent -->|"scoped tool calls"| mcp
+    llm["Approved external LLM inference"]
+    developer <-->|"authenticated IDE tunnel"| workspace
+    lifecycle -->|"create / start / stop"| workspace
+    workspace -->|"optional project environment"| devbox
+    devbox -.->|"only approved package sources"| nixCache
+    workspace -->|"task"| agentApi
+    agentApi --> osGateway
+    osGateway --> sandbox
+    workspace -->|"scoped requests"| mcp
+    sandbox -->|"scoped requests"| mcp
     mcp --> kb
     mcp --> systems
-    agent --> llmGateway
-    llmGateway -->|"minimized prompts"| llm
-~~~
+    sandbox --> inference
+    inference -->|"minimized prompts"| llm
+```
 
-**Important boundary:** The developer workspace is not the OpenShell sandbox. A developer may need an interactive shell and build tools, while the agent executes as an untrusted process in a separately restricted environment. Exact OpenShell integration is an evaluation item, not an existing integration.
+**Trust-boundary rule:** The interactive developer workspace is **not** an agent sandbox. OpenShell runs untrusted agents with a separately enforced execution identity and network/filesystem policy. Neither Coder nor Devbox substitutes for these controls. Their integration is still unverified.
 
 ## Components and access model
 
-| Component | Planned role | Access principle |
+| Component | Evaluation target | Access boundary |
 |---|---|---|
-| Workspace manager | Coder **or** DevPod; provisioning, connect, start/stop | Evaluated, not selected |
-| Devcontainer | Source checkout, dependencies, IDE backend, test tooling | Per-user/project workspace; no cluster-admin |
-| Workspace storage | Persistent home / working tree where needed | Scoped PVC; lifecycle and backup policy TBD |
-| Agent API / OpenShell | Launch sandboxed coding tasks | Separate agent identity and sandbox policy |
-| Knowledge Base / RAG | Search documents, code context, conventions | Reach through internal API, project-scoped |
-| Agent memory | State, checkpoints, history | Access via Agent API; no direct database credentials |
-| MCP Gateway | Approved GitLab, CI, registry, test, DB and internal API tools | Per-user/agent authorization, typed calls and audit |
-| Inference gateway | Approved external model access | Only selected context leaves the company boundary |
+| Workspace lifecycle | Coder control plane or a company-managed Kubernetes provisioner **to be determined** | OIDC/SSO (where supported), per-user/project namespaces, start/stop, audit |
+| Dev Container / workspace pod | Source checkout, IDE backend, persistent storage and approved build/test tooling | No cluster-admin, host Docker socket or privileged execution by default |
+| Devbox (optional) | Pinned package versions, reproducible scripts, exported Dev Container / Dockerfile | Versioned project configuration and `devbox.lock`; no unapproved public package egress |
+| Agent API + OpenShell | Launch restricted agent task in a **separate** sandbox | Distinct agent identity, policy, approval gates |
+| Knowledge Base / RAG | Internal search, conventions and project documentation | Project-scoped retrieval API; no direct database credentials |
+| Agent state and memory | Checkpoints and structured task history | Agent API, not unrestricted PostgreSQL access |
+| Internal tools | GitLab, CI, registry, tests, authorized DB/API workflows | Internal MCP Gateway and scoped credentials |
+| Inference gateway | Approved enterprise LLM provider | Only selected/redacted context crosses the company boundary |
 
-**Full tooling availability** means all required internal capabilities are reachable through authorized APIs. It does **not** mean unrestricted database, production, secret, or network access.
+**Full tool availability** means the complete approved capability catalog is accessible from either workspace design via authorized APIs. It does **not** mean unrestricted shell, production, network, database or secret access.
 
-## Coder vs. DevPod — open evaluation
+## Evaluation matrix — different architectural responsibilities
 
-| Criterion | Coder | DevPod | How to validate |
+| Question | Coder | Jetify Devbox | What needs verification |
 |---|---|---|---|
-| Architecture | Self-hosted workspace control plane and templates | Client-driven CLI with Kubernetes provider | Compare lifecycle, operator effort and governance |
-| Dev Containers | Devcontainer integration; container build strategy requires review | Dev Container-native workflow | Use the same example project and devcontainer.json |
-| VS Code / SSH | Available | Available | Measure connect, reconnect and debugging UX |
-| Kubernetes / OpenShift | Evaluate templates, security constraints and storage | Evaluate Kubernetes provider, RBAC and storage | Test restricted namespaces and non-root execution |
-| Identity / governance | Assess OIDC, team permissions, audit and policies | Assess client credentials, Kubernetes RBAC, central audit | Enforce equivalent least-privilege outcomes |
-| OpenShell integration | Design an adapter/task handoff | Design an adapter/task handoff | Same sandbox and policy test for both |
-| Operations / licensing | Evaluate server operations and licensing | Evaluate client/provider operations and support | Compare TCO and maintenance burden |
+| Kubernetes workspace lifecycle | Purpose-built management and templates | **Not a workspace provisioner** | If Devbox-first: what starts, stops and secures pods? |
+| Workspace connectivity | Remote IDE / SSH integration | Local CLI and editor integration; does not itself establish remote Kubernetes sessions | Use the same VS Code connectivity tests |
+| Environment definition | Dev Container files and image/build workflow | `devbox.json`, `devbox.lock`, Nix packages/scripts; `devbox generate devcontainer` | Compare reproducibility and image-build workflows |
+| OpenShift compatibility | Check templates, builders and controller permissions | Check Nix installation, image build and generated container constraints | SCC/non-root, PVC, rootless image builds |
+| Identity and audit | Evaluate central workspace governance | Relies on its workspace host/provisioner for access governance | Per-user/project authorization and traceability |
+| Package supply chain | Registry/image governance | Nix package resolution, caches, lockfile and reproducibility | Approved internal mirrors; no arbitrary internet |
+| OpenShell integration | Via workspace-to-agent API handoff | Via workspace-to-agent API handoff | Both must keep agent sandbox separate |
+| Operations and cost | Assess server, templates, licensing and support | Assess Devbox/Nix maintenance, package caches and supplementary provisioning | Compare **complete end-to-end stacks**, not CLI vs. server prices |
 
-**Do not assume** Docker-in-Docker, a mounted host Docker socket, privileged pods, or cluster-admin privileges are acceptable on OpenShift. Compare supported rootless/image-building patterns (including Coder Envbuilder where suitable) in the PoC.
+**OpenShift constraint:** Do not assume Docker-in-Docker, a shared host Docker socket, privileged pods or cluster-admin are available. Evaluate appropriate non-privileged image building, including Coder Envbuilder where applicable. Devbox-generated Dev Containers must work under the selected SCC/UID and filesystem policy.
 
-## Security and trust boundaries (to evaluate)
+## Devbox-specific security questions
 
-- **Identity:** SSO/OIDC where supported, per-developer/project Kubernetes RBAC, short-lived tool credentials, separate agent identity.
-- **Isolation:** Workspace pods and OpenShell sandbox pods use independently enforced boundaries; agent code does not gain workspace or Kubernetes privileges.
-- **Network:** Default-deny where feasible; explicit GitLab, internal registry, KB, MCP and agent API endpoints. OpenShell sandbox namespaces require **enforced ingress and egress Kubernetes NetworkPolicy**, not just policy objects.
-- **Tooling:** Typed project-scoped MCP tools; write actions and production access require explicit authorization / human approval.
-- **Code and storage:** Source remains on company-managed infrastructure. Validate PVC isolation, retention, cleanup and protection from cross-user access.
-- **Secrets:** Do not pass raw provider tokens or production credentials to the agent or devcontainer; broker narrow capabilities.
-- **Supply chain:** Approved base images, image scanning/signing, controlled dependency registries, predictable devcontainer builds.
-- **Audit:** Record workspace lifecycle, API/tool invocation and approvals without exporting sensitive prompts, logs or traces to SaaS telemetry.
-- **OpenShift fit:** Confirm SCC, non-root UID, volume permissions, CNI behavior, namespace ownership and controller permissions in a real cluster.
-- **Code changes:** Prefer agent changes via isolated branch / diff / review flow over writable sharing of the developer workspace with an agent.
+- Can `devbox shell`, `devbox run` and generated Dev Container workflows operate without unrestricted outbound network access?
+- Which calls are made to Nixhub, nixpkgs, public binary caches, GitHub or optional Jetify Cloud? Identify, explicitly approve or replace them with internal mirrors and prebuilt images.
+- Can approved package closures be prepared and cached internally by CI before developer workspaces start?
+- Are `devbox.json` and `devbox.lock` committed, reviewed and scanned? Can versions and package sources be restricted?
+- Are Devbox-generated Dockerfiles compatible with non-root OpenShift SCC and internal registries?
+- Is cloud authentication / remote secret synchronization unnecessary and disabled for confidential projects?
+- Can the same definition be reused in local development, Kubernetes workspaces and controlled CI without divergence?
 
-## CLI / client strategy — not a commitment
+## Security invariants
 
-- **First:** Evaluate existing Coder and DevPod CLIs and IDE integrations.
-- **Later, only if needed:** Define a thin company CLI or portal facade over an abstract workspace lifecycle API: create, list, open, stop, delete.
-- Never build a second Kubernetes provisioner merely to rename existing vendor commands.
+- **Identity:** Enterprise authentication, project RBAC, distinct workspace and agent identities.
+- **Network:** Default-deny with enforced ingress/egress Kubernetes NetworkPolicy. Approved KB, MCP, GitLab, registry, CI, package-cache and gateway endpoints only.
+- **Isolation:** Separate developer workspace and OpenShell sandbox processes/pods/permissions; no privileged shared mounts.
+- **Tool safety:** Typed MCP tools, policy checks and human approval for sensitive writes.
+- **Storage:** Scoped PVCs, secure workspace deletion, encryption/retention and cross-project access tests.
+- **Secrets:** Broker short-lived, task-scoped capabilities rather than placing production credentials in a shell.
+- **Supply chain:** Approved images, lockfiles and package caches; no silent public downloads.
+- **Audit:** Capture workspace lifecycle, tool calls and approvals without exporting confidential traces.
+- **Changes:** Prefer branch/diff/review workflows over direct writable mounts shared with an untrusted agent.
 
-## Evaluation plan (future work, not implemented)
+## CLI and interface policy — undecided
 
-1. **Architecture review:** Confirm threat model, trust zones, developer/agent identities, KB/MCP API contracts and OpenShift cluster prerequisites.
-2. **Parallel PoCs:** Run the **same repository and devcontainer specification** with Coder and DevPod on company-managed Kubernetes/OpenShift.
-3. **Integration checks:** VS Code access; start/stop/reconnect; persistent storage; GitLab clone; internal registry; KB search; MCP tooling; CI/test; OpenShell sandbox handoff.
-4. **Negative security tests:** Deny unknown egress, cross-project KB requests, direct secrets, privilege escalation, bypass of the agent gateway and unauthorized write tools.
-5. **Decision gate:** Compare security, functionality, user experience, maintainability, license/TCO and exit portability before choosing Coder, DevPod or another option.
+- Start by evaluating **Coder's workspace CLI / IDE access** for provisioning and **Devbox's `devbox shell`, `devbox run` and generation commands** for reproducibility.
+- Do **not** treat the Devbox CLI as a replacement for workspace create/list/open/stop/delete functions.
+- A company-specific thin CLI or portal is only a possible **future** facade if the evaluation reveals lifecycle or integration gaps. No implementation is planned now.
 
-**Acceptance target:** Either evaluated tool can provide a usable remote developer workspace without weakening the current on-prem security model. Selecting a tool requires documented evidence, not a predetermined preference.
+## Planned evaluation (no implementation yet)
+
+1. **Architecture / threat model:** Confirm OpenShift SCC, CNI enforcement, identities, KB/MCP contracts, runtime isolation and approved package supply chain.
+2. **Track A — Coder:** Test a company-managed Kubernetes workspace with a conventional `devcontainer.json`, VS Code, PVC and scoped tool access.
+3. **Track B — Devbox:** Test `devbox.json` / `devbox.lock`, generated Dev Container and toolchain. Separately identify a compliant Kubernetes workspace provisioner and remote IDE connection; do not assume Devbox supplies them.
+4. **Track C — Combination:** Assess Coder-provisioned workspaces using Devbox-generated or Devbox-managed project tooling.
+5. **Common integration / denial tests:** Same repository and tests; KB search, GitLab, MCP, CI, OpenShell task handoff, persistence, identity; deny unknown egress, cross-project access, secret retrieval, privilege escalation and unauthorized writes.
+6. **Decision gate:** Assess complete candidate architectures against security, IDE UX, reproducibility, Kubernetes fit, operability, cost, maintenance and portability. **No selection without evidence.**
+
+**Acceptance target:** Any approved architecture provides secure VS Code development on company-managed Kubernetes/OpenShift, the required internal Knowledge Base and MCP tooling, isolated OpenShell agent execution and strictly controlled external LLM inference.
 
 ## Reference documentation
 
 - [Dev Containers specification](https://containers.dev/)
 - [Coder: Dev Containers](https://coder.com/docs/user-guides/devcontainers)
 - [Coder: Working with Dev Containers](https://coder.com/docs/user-guides/devcontainers/working-with-dev-containers)
-- [DevPod: Kubernetes provider and other providers](https://devpod.sh/docs/managing-providers/add-provider)
-- [DevPod: CLI Quickstart](https://devpod.sh/docs/getting-started/quickstart-devpod-cli)
+- [Jetify Devbox: Overview](https://www.jetify.com/devbox)
+- [Jetify Devbox: Documentation](https://www.jetify.com/docs/devbox)
+- [Jetify: Generate Dockerfile and Dev Container](https://www.jetify.com/blog/creating-nix-powered-docker-containers-with-devbox)
+- [Jetify: Nix package cache considerations](https://www.jetify.com/blog/dont-rebuild-yourself-an-intro-to-nix-package-caches)
 - [OpenShell: Kubernetes setup](https://docs.nvidia.com/openshell/kubernetes/setup)
 - [OpenShell: Sandbox policies](https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview)
