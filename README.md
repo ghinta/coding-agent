@@ -20,30 +20,31 @@ sequenceDiagram
     participant SB as Company Sandbox
 
     Dev->>RT: Prompt - investigate and fix failing tests
-    opt Authorized local prefetch
+    Note over RT,GW: Legend: opt = optional, loop = repeat, alt/else = choose one path
+    opt OPTIONAL - Fetch initial context if needed
         RT->>MCP: Retrieve limited metadata
         MCP->>SYS: Scoped search
         SYS-->>MCP: Matching context
         MCP-->>RT: Filtered results
     end
-    loop Until verified or stopped by policy / budget
+    loop REPEAT - Until verified or stopped by policy / budget
         RT->>GW: Goal + selected context / observations
         GW->>LLM: Approved minimized inference request
         LLM-->>GW: Plan, tool request or code proposal
         GW-->>RT: Model response
-        alt Need internal evidence
+        alt CHOICE 1 - More internal information needed
             RT->>MCP: Typed, authorized tool call
             MCP->>SYS: Search docs / inspect repo / query CI
             SYS-->>MCP: Tool result
             MCP-->>RT: Filtered evidence
-        else Code change or verification
+        else CHOICE 2 - Change code or verify with tests
             RT->>SB: Run permitted edit / tests
             SB-->>RT: Diff, logs and test evidence
-        else Enough evidence
+        else CHOICE 3 - Enough evidence to finish
             RT->>RT: Validate completion criteria
         end
     end
-    opt Sensitive write action
+    opt OPTIONAL - Human approval for sensitive writes
         RT-->>Dev: Request approval
         Dev-->>RT: Approve or reject
     end
