@@ -27,7 +27,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </style>
 </head>
 <body>
-<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#openshell">OpenShell</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
+<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#openshell">OpenShell</a><a href="#dev-environments">Dev Envs</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
 <main id="top">
 <section class="hero"><div class="wrap">
 <div class="badge"><span class="dot"></span>Architecture evaluation · confidential software engineering</div>
@@ -171,8 +171,62 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="callout"><b>Evaluation target:</b> OpenShell is a ready-to-go security/runtime option for Variant A, not a new cloud architecture. Preferred operating model: <b>agent runtime on-prem + external inference for heavy workloads</b>, with optional local vLLM only where capacity and model size make it practical.</div>
 </div></section>
 
+
+<section id="dev-environments"><div class="wrap">
+<div class="head"><h2>Remote development environments</h2><p><b>Proposal — evaluation only.</b> Developers connect from VS Code to Dev Containers on company-managed Kubernetes / OpenShift. Coder and DevPod remain equal candidates. No platform, integration or CLI has been implemented or selected.</p></div>
+
+<div class="grid g2">
+<div class="card"><div class="kicker">Candidate A · not selected</div><h3><a href="https://coder.com/docs/user-guides/devcontainers">Coder</a></h3><p>Self-hosted workspace control plane, templates and IDE access. Evaluate Dev Container integration, OpenShift-compatible build methods, centralized identity/RBAC, lifecycle, operations and licensing.</p></div>
+<div class="card"><div class="kicker">Candidate B · not selected</div><h3><a href="https://devpod.sh/docs/managing-providers/add-provider">DevPod</a></h3><p>Client-led Dev Container workflows using a Kubernetes provider. Evaluate VS Code/SSH, OpenShift integration, credential handling, lifecycle, governance, auditing and operational effort.</p></div>
+</div>
+
+<div class="c4-view" style="margin-top:20px">
+<div class="c4-title"><div><h3>Proposed workspace and agent separation</h3><p>A developer's interactive container and an untrusted agent sandbox have different identities, policies and lifecycles.</p></div><span class="c4-level">Architecture proposal</span></div>
+<div class="c4-canvas">
+<div class="c4-row">
+<div class="c4-node person"><b>Developer</b><small>VS Code / SSH / existing CLI</small></div>
+<div class="c4-arrow">↔<small>secure connection</small></div>
+<div class="c4-boundary onprem">
+<div class="c4-boundary-title">Company · Kubernetes / OpenShift</div>
+<div class="c4-col">
+<div class="c4-node primary"><b>Coder OR DevPod</b><small>workspace provisioning · decision open</small></div>
+<div class="c4-node"><b>Devcontainer Workspace Pod</b><small>source · tooling · persistent storage</small></div>
+<div class="c4-node primary"><b>Agent API → OpenShell</b><small>separate restricted sandbox pod</small></div>
+</div>
+</div>
+<div class="c4-arrow">↔<small>authorized APIs</small></div>
+<div class="c4-boundary onprem">
+<div class="c4-boundary-title">Internal capabilities</div>
+<div class="c4-col">
+<div class="c4-node store"><b>Knowledge Base</b><small>RAG · memory API</small></div>
+<div class="c4-node"><b>MCP Gateway</b><small>GitLab · CI · DB · tests</small></div>
+<div class="c4-node"><b>LLM Gateway</b><small>approved external inference only</small></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="head" style="margin-top:34px"><h2>Workspace access and trust boundaries</h2><p>All required capabilities should be available through project-scoped APIs, not unrestricted access to the underlying stores or production credentials.</p></div>
+<div class="table"><table>
+<thead><tr><th>Capability</th><th>Planned access</th><th>Boundary to validate</th></tr></thead>
+<tbody>
+<tr><td><b>Knowledge Base + memory</b></td><td>Internal retrieval and agent APIs</td><td>Project-scoped authorization; no direct PostgreSQL credentials</td></tr>
+<tr><td><b>GitLab + registry + CI</b></td><td>Approved workspace endpoints / typed MCP tools</td><td>Least privilege, scoped identity and audit</td></tr>
+<tr><td><b>Agent tasks</b></td><td>Agent API → OpenShell Gateway → separate agent sandbox</td><td>Sandbox policy, identity, isolation and no privileged shared mounts</td></tr>
+<tr><td><b>Inference</b></td><td>Existing LLM Gateway</td><td>Redaction and approved egress only; code and state remain under company control</td></tr>
+</tbody></table></div>
+
+<div class="grid g3" style="margin-top:20px">
+<div class="card"><div class="kicker">Evaluate</div><h3>Coder vs. DevPod</h3><p>Same project and devcontainer.json; VS Code UX, persistence, security, OIDC/RBAC, audit, cost, maintainability and OpenShift fit.</p></div>
+<div class="card"><div class="kicker">Verify</div><h3>OpenShell + Kubernetes</h3><p>Separate agent workload; default-deny egress; enforced Kubernetes ingress/egress NetworkPolicy; SCC/non-root compatibility and scoped tools.</p></div>
+<div class="card"><div class="kicker">Defer</div><h3>Unified CLI</h3><p>First assess the existing Coder and DevPod clients. Consider a thin provider-neutral company CLI only if the evaluation shows a real gap.</p></div>
+</div>
+<div class="callout"><b>Evaluation boundary:</b> only company-managed Kubernetes/OpenShift workspaces are in scope. There is no plan for devcontainers running on an external PaaS. <a href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md">Read the detailed remote development evaluation plan →</a></div>
+</div></section>
+
 <section id="c4"><div class="wrap">
-<div class="head"><h2>C4 architecture model</h2><p>The preferred setup is described at four levels. Each view adds detail while preserving the same trust boundary: the agent platform remains on-premises and only minimized inference traffic leaves through the LLM Gateway.</p></div>
+<div class="head"><h2>C4 architecture model</h2><p>The reference C4 views preserve the on-prem trust boundary; the new remote-workspace deployment view is an evaluation proposal, with Coder and DevPod still undecided.</p></div>
 
 <div class="c4-grid">
 
@@ -286,6 +340,35 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="c4-legend"><span><i class="legend-dot legend-green"></i>Company trust boundary</span><span><i class="legend-dot legend-amber"></i>DMZ / egress control</span><span><i class="legend-dot legend-red"></i>External trust zone</span></div>
 </div>
 
+<div class="c4-view">
+<div class="c4-title"><div><h3>Remote Development Workspace Extension</h3><p>Proposed deployment boundaries for Coder or DevPod, with separate agent execution and shared internal capabilities.</p></div><span class="c4-level">C4 · Deployment (proposed)</span></div>
+<div class="c4-canvas">
+<div class="c4-row">
+<div class="c4-node person"><b>Developer</b><small>VS Code · secure SSH</small></div>
+<div class="c4-arrow">↔<small>remote IDE</small></div>
+<div class="c4-boundary onprem">
+<div class="c4-boundary-title">Company-managed Kubernetes / OpenShift</div>
+<div class="c4-col">
+<div class="c4-node primary"><b>Coder OR DevPod</b><small>provisioning · not selected</small></div>
+<div class="c4-node"><b>Developer Workspace Pod</b><small>Devcontainer · repo · PVC</small></div>
+<div class="c4-node"><b>Agent API + OpenShell Gateway</b><small>sandbox lifecycle / security policy</small></div>
+<div class="c4-node"><b>Isolated Agent Sandbox Pod</b><small>separate identity and network boundary</small></div>
+</div>
+</div>
+<div class="c4-arrow">↔<small>typed APIs</small></div>
+<div class="c4-boundary onprem">
+<div class="c4-boundary-title">Company services</div>
+<div class="c4-col">
+<div class="c4-node store"><b>Knowledge Base + Memory</b><small>RAG + scoped API</small></div>
+<div class="c4-node"><b>MCP Tool Gateway</b><small>GitLab · CI · registry · tests</small></div>
+<div class="c4-node"><b>LLM Gateway</b><small>only approved inference egress</small></div>
+</div>
+</div>
+</div>
+</div>
+<div class="c4-legend"><span><i class="legend-dot legend-green"></i>Company-controlled workspace and state</span><span><i class="legend-dot legend-blue"></i>Separate developer and agent workloads</span><span><i class="legend-dot legend-amber"></i>External inference through controlled gateway</span></div>
+</div>
+
 </div>
 
 <div class="callout"><b>C4 design rule:</b> every deeper level preserves the same security model. The model provider never receives credentials, direct tool access, persistent agent state, traces or unrestricted repository contents.</div>
@@ -362,9 +445,10 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div></section>
 
 <section id="roadmap"><div class="wrap">
-<div class="head"><h2>Proposed implementation path</h2><p>Increase autonomy only after evidence, observability and policy controls are proven.</p></div>
+<div class="head"><h2>Proposed implementation path</h2><p>Architecture planning only: no workspace platform selected or deployed. Evaluate Coder and DevPod before any implementation decision; increase autonomy only after evidence, observability and policy controls are proven.</p></div>
 <div class="timeline">
 <div class="phase"><strong>Phase 0</strong><div><h3>Architecture and contracts</h3><p>Finalize provider requirements, data classes, trust boundaries, tool contracts, identity model and ownership.</p></div></div>
+<div class="phase"><strong>Phase 0a</strong><div><h3>Remote Workspace evaluation: Coder vs. DevPod</h3><p>Compare both candidates on company-managed Kubernetes / OpenShift against the same Dev Container, VS Code, KB/MCP, security, OpenShell, lifecycle and operating-cost criteria. Decision deferred until the evidence is reviewed.</p></div></div>
 <div class="phase"><strong>Phase 1</strong><div><h3>Read-only coding assistant</h3><p>Repository inspection, search, CI/log analysis and internal knowledge access. No write-capable tools.</p></div></div>
 <div class="phase"><strong>Phase 2</strong><div><h3>Verified engineering workflows</h3><p>Feature planning, sandboxed code changes, tests, selective PR review, verifier and complete tracing.</p></div></div>
 <div class="phase"><strong>Phase 3</strong><div><h3>Controlled write actions</h3><p>Feature branches and merge-request creation behind OPA policies, approval gates and project-level RBAC.</p></div></div>
@@ -375,6 +459,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <section><div class="wrap">
 <div class="head"><h2>Project documents</h2><p>The page is the executive overview. The repository documents contain the detailed architecture and research material.</p></div>
 <div class="docs">
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md"><b>Remote development — evaluation</b><span>Coder vs. DevPod on Kubernetes/OpenShift, agent isolation, KB/MCP access, trust boundaries and deferred CLI.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-inference-agent-on-prem.md"><b>Remote inference — agent on-prem</b><span>Preferred architecture, C4 views, trust zones, gateway, tools and data classes.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/cloud-agent-cloud-llm"><b>Cloud agent + cloud LLM</b><span>Alternative deployment with an on-prem MCP Gateway as the primary boundary.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/agentic-workflows.md"><b>Agentic workflows</b><span>Feature delivery, PR review, CI/CD, security, incidents, data and HITL patterns.</span></a>
