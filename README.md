@@ -4,7 +4,59 @@
 
 Architecture evaluation for an **agentic coding platform at a Company** with maximum data sovereignty: agents work on confidential code and internal systems, while LLM inference is consumed as an external service (no own GPUs, no own model hosting).
 
-## Overview
+## Prompt-to-Result Workflow
+
+**The prompt starts with the developer, not the provider.** The company agent runtime promptly calls the external LLM through the approved gateway. The LLM plans, requests tools or proposes code; the on-prem runtime validates and executes permitted actions through MCP and an isolated sandbox. Relevant results can be sent back to the model for the next decision, repeating until verification or a stop condition.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Developer (VS Code)
+    participant RT as Company Agent Runtime
+    participant GW as Company LLM Gateway
+    participant LLM as External LLM
+    participant MCP as Company MCP + Policy
+    participant SYS as Knowledge Base / GitLab / CI
+    participant SB as Company Sandbox
+
+    Dev->>RT: Prompt - investigate and fix failing tests
+    opt Authorized local prefetch
+        RT->>MCP: Retrieve limited metadata
+        MCP->>SYS: Scoped search
+        SYS-->>MCP: Matching context
+        MCP-->>RT: Filtered results
+    end
+    loop Until verified or stopped by policy / budget
+        RT->>GW: Goal + selected context / observations
+        GW->>LLM: Approved minimized inference request
+        LLM-->>GW: Plan, tool request or code proposal
+        GW-->>RT: Model response
+        alt Need internal evidence
+            RT->>MCP: Typed, authorized tool call
+            MCP->>SYS: Search docs / inspect repo / query CI
+            SYS-->>MCP: Tool result
+            MCP-->>RT: Filtered evidence
+        else Code change or verification
+            RT->>SB: Run permitted edit / tests
+            SB-->>RT: Diff, logs and test evidence
+        else Enough evidence
+            RT->>RT: Validate completion criteria
+        end
+    end
+    opt Sensitive write action
+        RT-->>Dev: Request approval
+        Dev-->>RT: Approve or reject
+    end
+    RT-->>Dev: Verified result, diff and test report
+```
+
+**Data boundary:** source repositories, RAG indexes, persistent memory, traces, tool credentials and execution remain company-controlled. **Selected code snippets, tool results and prompts may leave the company during inference**; minimize/redact them and secure provider contracts. The external LLM never connects directly to internal systems.
+
+**Reading guide:** This sequence shows **execution order**. C4 and deployment diagrams below show **placement and interfaces**, not a one-way processing pipeline.
+
+## System Overview (static component relationships)
+
+This structural view is **not execution order**: the agent calls the LLM repeatedly while using local tools between model decisions.
 
 ```mermaid
 flowchart TB
@@ -18,9 +70,9 @@ flowchart TB
     end
 
     dev -->|Tasks| platform
-    platform -->|Prompts| llm
-    platform -->|MCP| gitlab
-    platform -->|MCP| internal
+    platform <-->|Inference requests and model replies| llm
+    platform <-->|Authorized MCP tools and results| gitlab
+    platform <-->|Authorized MCP tools and results| internal
 
     classDef person fill:#08427b,stroke:#052e56,color:#fff
     classDef system fill:#1168bd,stroke:#0b4884,color:#fff
@@ -43,6 +95,8 @@ The central question is **where the agent runtime lives** – this defines the t
 | Data sovereignty | Maximum | Reduced |
 
 ## Remote workspace architecture (under evaluation)
+
+Workspace patterns A/B/C are **independent of inference deployment choices**. All share the same prompt-to-result loop; only the workspace and sandbox deployment changes.
 
 | Variant | Developer workspace | Agent security |
 |---|---|---|

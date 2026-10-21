@@ -6,6 +6,56 @@
 - Consume **LLM inference as an external service** – no own GPUs, no own model hosting.
 - The **LLM Gateway is the only egress path**; everything else stays inside Company.
 
+## Prompt-to-Result Workflow
+
+**The prompt starts with the developer, not the provider.** The company agent runtime promptly calls the external LLM through the approved gateway. The LLM plans, requests tools or proposes code; the on-prem runtime validates and executes permitted actions through MCP and an isolated sandbox. Relevant results can be sent back to the model for the next decision, repeating until verification or a stop condition.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Developer (VS Code)
+    participant RT as Company Agent Runtime
+    participant GW as Company LLM Gateway
+    participant LLM as External LLM
+    participant MCP as Company MCP + Policy
+    participant SYS as Knowledge Base / GitLab / CI
+    participant SB as Company Sandbox
+
+    Dev->>RT: Prompt - investigate and fix failing tests
+    opt Authorized local prefetch
+        RT->>MCP: Retrieve limited metadata
+        MCP->>SYS: Scoped search
+        SYS-->>MCP: Matching context
+        MCP-->>RT: Filtered results
+    end
+    loop Until verified or stopped by policy / budget
+        RT->>GW: Goal + selected context / observations
+        GW->>LLM: Approved minimized inference request
+        LLM-->>GW: Plan, tool request or code proposal
+        GW-->>RT: Model response
+        alt Need internal evidence
+            RT->>MCP: Typed, authorized tool call
+            MCP->>SYS: Search docs / inspect repo / query CI
+            SYS-->>MCP: Tool result
+            MCP-->>RT: Filtered evidence
+        else Code change or verification
+            RT->>SB: Run permitted edit / tests
+            SB-->>RT: Diff, logs and test evidence
+        else Enough evidence
+            RT->>RT: Validate completion criteria
+        end
+    end
+    opt Sensitive write action
+        RT-->>Dev: Request approval
+        Dev-->>RT: Approve or reject
+    end
+    RT-->>Dev: Verified result, diff and test report
+```
+
+**Data boundary:** source repositories, RAG indexes, persistent memory, traces, tool credentials and execution remain company-controlled. **Selected code snippets, tool results and prompts may leave the company during inference**; minimize/redact them and secure provider contracts. The external LLM never connects directly to internal systems.
+
+**Reading guide:** This sequence shows **execution order**. C4 and deployment diagrams below show **placement and interfaces**, not a one-way processing pipeline.
+
 ## Principles
 
 | # | Principle | Consequence |
@@ -19,6 +69,8 @@
 | P7 | Provider-agnostic | OpenAI-compatible API behind the gateway; provider switch = config change. |
 
 ## C4 Model
+
+**Structural views only:** See the [Prompt-to-Result Workflow](#prompt-to-result-workflow) for the actual repeated inference/tool execution order.
 
 Views follow the [C4 model](https://c4model.com):
 
@@ -57,9 +109,9 @@ flowchart TB
     end
 
     dev -->|Tasks| platform
-    platform -->|Prompts| llm
-    platform -->|MCP| gitlab
-    platform -->|MCP| internal
+    platform <-->|Inference calls and replies| llm
+    platform <-->|MCP calls and results| gitlab
+    platform <-->|MCP calls and results| internal
 
     classDef person fill:#08427b,stroke:#052e56,color:#fff
     classDef system fill:#1168bd,stroke:#0b4884,color:#fff
@@ -94,11 +146,11 @@ flowchart TB
     dev -->|Tasks| api
     api -->|Jobs| runtime
     runtime -->|State| store
-    runtime -->|Prompts| gw
-    gw -->|Egress| llm
-    runtime -->|Tools| mcp
+    runtime <-->|Request / model response| gw
+    gw <-->|Inference request / reply| llm
+    runtime <-->|Authorized tool call / result| mcp
     mcp -->|Authorize| policy
-    mcp -->|Access| internal
+    mcp <-->|Tool request / result| internal
 
     classDef person fill:#08427b,stroke:#052e56,color:#fff
     classDef system fill:#1168bd,stroke:#0b4884,color:#fff
@@ -149,7 +201,8 @@ flowchart TB
     sup -->|Context| ctx
     sup -->|Checkpoints| store
     ctx -->|Memory| store
-    ctx -->|Prompts| gw
+    ctx -->|Selected context| gw
+    gw -->|Model decisions| sup
     agents -->|Tools| tools
     tools -->|Calls| mcp
 
@@ -176,31 +229,11 @@ flowchart TB
 
 ## Dynamic – One Task (ReAct Loop with HITL)
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Developer
-    participant RT as Runtime
-    participant GW as Gateway
-    participant LLM as Provider
-    participant MCP as MCP Tools
-    participant POL as Policy
+The authoritative sequence is the [Prompt-to-Result Workflow](#prompt-to-result-workflow) above. It shows the provider's responses **through** the local LLM Gateway and the repeated on-prem MCP/sandbox actions.
 
-    Dev->>RT: Task
-    loop max hops / budget
-        RT->>GW: Prompt
-        GW->>LLM: Redacted prompt
-        LLM-->>RT: Tool request
-        RT->>MCP: Tool call
-        MCP->>POL: Authorize
-        alt write tool
-            POL-->>Dev: Approval
-            Dev-->>MCP: Approve
-        end
-        MCP-->>RT: Result
-    end
-    RT-->>Dev: Result
-```
+- Model requests are untrusted proposals, not authority to access internal systems.
+- The runtime authorizes, executes and verifies actions locally, then decides which observations to send to the model in the next call.
+- Sensitive writes require policy-based human approval; tokens, hops, time and costs are bounded.
 
 ## Deployment – Trust Zones
 
@@ -221,10 +254,10 @@ flowchart LR
         llm[["LLM Endpoint"]]
     end
 
-    runtime -->|MCP| mcp
+    runtime <-->|Tool calls and results| mcp
     runtime -->|SQL| store
-    runtime -->|Prompts| gw
-    gw -->|mTLS| llm
+    runtime <-->|Inference requests and replies| gw
+    gw <-->|HTTPS inference| llm
 
     classDef person fill:#08427b,stroke:#052e56,color:#fff
     classDef system fill:#1168bd,stroke:#0b4884,color:#fff

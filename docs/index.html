@@ -24,14 +24,62 @@ section{padding:58px 0;scroll-margin-top:72px}.head{display:grid;grid-template-c
 .c4-grid{display:grid;gap:18px}.c4-view{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,rgba(23,33,48,.96),rgba(18,25,35,.95));padding:22px;overflow:hidden}.c4-title{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}.c4-title h3{margin:0;font-size:1.2rem}.c4-title p{margin:4px 0 0;color:var(--muted);max-width:760px}.c4-level{white-space:nowrap;border:1px solid rgba(114,167,255,.35);background:rgba(114,167,255,.08);color:var(--blue);padding:6px 9px;border-radius:999px;font-size:.75rem;font-weight:800}.c4-canvas{border:1px solid #273548;border-radius:15px;background:#0d131b;padding:18px;overflow-x:auto}.c4-row{display:flex;align-items:center;justify-content:center;gap:14px;min-width:780px}.c4-col{display:flex;flex-direction:column;gap:10px}.c4-boundary{border:1px dashed #4b627e;border-radius:16px;padding:16px;background:rgba(18,25,35,.62)}.c4-boundary.onprem{border-color:rgba(116,223,189,.55)}.c4-boundary.dmz{border-color:rgba(255,199,107,.5)}.c4-boundary.external{border-color:rgba(255,147,147,.42)}.c4-boundary-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:10px}.c4-node{min-width:155px;border:1px solid #35475f;border-radius:12px;background:#151f2c;padding:11px 13px;text-align:center}.c4-node.primary{border-color:rgba(114,167,255,.65);background:rgba(114,167,255,.1)}.c4-node.person{border-radius:999px;min-width:135px}.c4-node.store{border-radius:50% / 18%;border-color:rgba(116,223,189,.55)}.c4-node.external{border-color:rgba(255,147,147,.45)}.c4-node b{display:block;font-size:.9rem}.c4-node small{display:block;color:var(--muted);font-size:.75rem;margin-top:3px}.c4-arrow{min-width:70px;text-align:center;color:var(--muted);font-size:1.45rem}.c4-arrow small{display:block;font-size:.68rem;line-height:1.2;margin-top:2px}.c4-subgrid{display:grid;grid-template-columns:repeat(3,minmax(155px,1fr));gap:10px}.c4-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:13px;color:var(--muted);font-size:.78rem}.legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.legend-blue{background:var(--blue)}.legend-green{background:var(--green)}.legend-amber{background:var(--amber)}.legend-red{background:var(--red)}.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.doc{display:block;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:17px;color:var(--text)}.doc:hover{text-decoration:none;border-color:rgba(114,167,255,.55)}.doc span{display:block;color:var(--muted);font-size:.84rem;margin-top:5px}
 footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(--muted);margin-top:30px}
 @media(max-width:980px){.metrics,.memory{grid-template-columns:repeat(2,1fr)}.g3,.docs{grid-template-columns:1fr 1fr}.arch,.agents{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.c4-title{flex-direction:column}.c4-subgrid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.links{display:none}.hero{padding-top:60px}.metrics,.memory,.g2,.g3,.docs{grid-template-columns:1fr}.head{grid-template-columns:1fr;gap:10px}.phase{grid-template-columns:1fr;gap:5px}.wrap{width:min(var(--max),calc(100% - 22px))}}
+
+.flow-hero{padding:70px 0 38px}.flow-hero h1{font-size:clamp(2.5rem,5.7vw,4.8rem);line-height:1.02;max-width:1060px}
+.pf-surface{margin-top:32px;border:1px solid #35475f;border-radius:22px;background:linear-gradient(160deg,#131d2b,#0e151e);padding:24px}
+.pf-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:19px}.pf-heading b{font-size:1.04rem}.pf-heading span{color:var(--muted);font-size:.84rem}
+.pf-route{display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1.12fr) 40px minmax(0,.96fr) 40px minmax(0,.96fr);gap:8px;align-items:stretch}
+.pf-node{border:1px solid #3b4f69;border-radius:14px;background:#111c2a;min-height:138px;padding:15px;min-width:0}.pf-node small{display:block;color:var(--blue);font-weight:800;font-size:.69rem;text-transform:uppercase;letter-spacing:.06em}
+.pf-node b{display:block;font-size:1.06rem;line-height:1.25;margin:10px 0 6px}.pf-node p{margin:0;font-size:.82rem;color:var(--muted);line-height:1.43}
+.pf-local{border-color:rgba(116,223,189,.5);background:rgba(35,84,71,.12)}.pf-local small{color:var(--green)}
+.pf-gateway{border-color:rgba(255,199,107,.5)}.pf-gateway small{color:var(--amber)}.pf-external{border-color:rgba(255,147,147,.5);background:rgba(117,56,68,.1)}.pf-external small{color:var(--red)}
+.pf-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#b7c7dc}.pf-arrow strong{font-size:1.8rem;font-weight:400}.pf-arrow small{font-size:.65rem;line-height:1.2;text-align:center;color:var(--muted);max-width:70px}
+.pf-loop{margin-top:15px;border:1px dashed rgba(116,223,189,.55);border-radius:14px;padding:19px;background:rgba(116,223,189,.035)}.pf-loop h3{margin:0;color:var(--green);font-size:1.06rem}.pf-loop p{margin:5px 0 14px;color:var(--muted);font-size:.9rem}
+.pf-local-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.pf-tool{border:1px solid #344b57;background:#121d26;border-radius:10px;padding:12px}.pf-tool b{display:block;font-size:.86rem}.pf-tool span{display:block;font-size:.78rem;color:var(--muted);margin-top:4px}
+.pf-return{margin-top:13px;font-size:.88rem;color:#c1e9dd}.pf-result{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:14px;background:rgba(114,167,255,.06);border:1px solid rgba(114,167,255,.36);border-radius:12px;padding:15px 18px}.pf-result b{font-size:.96rem}.pf-result span{font-size:.86rem;color:var(--muted)}
+.pf-boundary{font-size:.88rem;color:var(--muted);margin:15px 0 0;line-height:1.5}.pf-boundary strong{color:var(--text)}.project-intro{padding:38px 0 44px}.project-intro h2{font-size:clamp(2rem,4.7vw,3.7rem);line-height:1.04;letter-spacing:-.045em;max-width:1020px;margin:17px 0 16px}
+@media(max-width:1100px){.links{gap:11px}.links a{font-size:.81rem}}@media(max-width:950px){.pf-route{grid-template-columns:1fr}.pf-node{min-height:0}.pf-arrow{min-height:32px;flex-direction:row;gap:10px}.pf-arrow strong{transform:rotate(90deg);font-size:1.4rem}.pf-arrow small{max-width:100%}.pf-local-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.links{display:none}}
+@media(max-width:650px){.flow-hero{padding:46px 0 22px}.pf-surface{padding:14px}.pf-heading{align-items:flex-start;flex-direction:column;gap:2px}.pf-local-tools{grid-template-columns:1fr}.pf-result{flex-direction:column;align-items:flex-start;gap:4px}.pf-loop{padding:12px}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#architecture">Architecture</a><a href="#openshell">OpenShell</a><a href="#dev-environments">Dev Envs</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
+<header><div class="wrap"><nav><a class="brand" href="#top"><span class="mark">CA</span>Coding Agent</a><div class="links"><a href="#prompt-flow">Prompt Flow</a><a href="#architecture">Architecture</a><a href="#openshell">OpenShell</a><a href="#dev-environments">Dev Envs</a><a href="#agents">Agents</a><a href="#workflows">Workflows</a><a href="#security">Security</a><a href="#roadmap">Roadmap</a><a href="#c4">C4 Model</a></div></nav></div></header>
 <main id="top">
-<section class="hero"><div class="wrap">
-<div class="badge"><span class="dot"></span>Architecture evaluation · confidential software engineering</div>
-<h1>Enterprise coding agents without giving up control of code, tools, or state.</h1>
+<section id="prompt-flow" class="hero flow-hero"><div class="wrap">
+<div class="badge"><span class="dot"></span>Start here · prompt-to-result · architecture evaluation</div>
+<h1>From your prompt to verified code.</h1>
+<p class="lead">The external LLM reasons and proposes actions <b>throughout</b> the task. The company-run agent runtime orchestrates permitted actions using internal Knowledge Base, MCP tools and isolated sandboxes. Results inform the LLM's next decision. This is a <b>loop</b>, not a final handoff to the LLM.</p>
+<div class="pf-surface" role="group" aria-label="Prompt-to-result lifecycle">
+<div class="pf-heading"><b>01–04 · Inference request and response path</b><span>Used repeatedly during one task</span></div>
+<div class="pf-route">
+<div class="pf-node"><small>01 · Developer</small><b>Submit prompt</b><p>VS Code / remote workspace: “Investigate failing tests and propose a fix.”</p></div>
+<div class="pf-arrow" aria-hidden="true"><strong>→</strong><small>task</small></div>
+<div class="pf-node pf-local"><small>02 · Company / OpenShift</small><b>Agent Runtime</b><p>Authenticates, selects context, orchestrates steps and validates results.</p></div>
+<div class="pf-arrow" aria-hidden="true"><strong>⇄</strong><small>repeated calls</small></div>
+<div class="pf-node pf-gateway"><small>03 · Company / DMZ</small><b>LLM Gateway</b><p>Approved egress, redaction, budgets and audit metadata.</p></div>
+<div class="pf-arrow" aria-hidden="true"><strong>⇄</strong><small>requests + replies</small></div>
+<div class="pf-node pf-external"><small>04 · External provider</small><b>LLM inference</b><p>Plans, requests tools, proposes code and interprets observations.</p></div>
+</div>
+<div class="pf-loop">
+<h3>↻ Plan → act → observe → verify → repeat</h3>
+<p>The model suggests actions; the <b>company agent runtime</b> validates and executes only permitted ones. Results return to the runtime, which sends <b>selected</b> observations to the LLM for the next decision.</p>
+<div class="pf-local-tools">
+<div class="pf-tool"><b>Knowledge Base / RAG</b><span>Internal docs, code search and conventions</span></div>
+<div class="pf-tool"><b>MCP + policies</b><span>Typed, authenticated tool calls</span></div>
+<div class="pf-tool"><b>GitLab / CI / APIs</b><span>Branches, logs, tests and systems</span></div>
+<div class="pf-tool"><b>Sandbox + verifier</b><span>Apply permitted changes and test locally</span></div>
+</div>
+<div class="pf-return">↺ Tool results / test evidence → Agent Runtime → LLM Gateway ⇄ LLM. Repeat until verified, stopped or awaiting approval.</div>
+</div>
+<div class="pf-result"><b>05 · Verified result → Developer</b><span>Code diff · real test results · audit evidence · approval where required</span></div>
+<p class="pf-boundary"><strong>Data boundary:</strong> repositories, RAG indexes, persistent memory, credentials, local execution and traces stay under company control. <strong>Selected</strong> code snippets or tool results may be processed by the external model. The provider never directly accesses MCP, GitLab or databases.</p>
+</div>
+<div class="chips"><a class="chip" href="#architecture">System boundaries ↓</a><a class="chip" href="#dev-environments">Workspace + security alternatives ↓</a><a class="chip" href="#c4">C4 deployment views ↓</a></div>
+</div></section>
+
+<section class="project-intro"><div class="wrap">
+<div class="kicker">Why this architecture</div>
+<h2>Enterprise coding agents without giving up control of code, tools, or state.</h2>
 <p class="lead">The project defines an agentic coding platform for confidential repositories and internal systems. The preferred architecture keeps the complete agent harness on-premises and treats the external LLM as a replaceable, stateless inference service.</p>
 <div class="chips"><span class="chip">Remote Development Platform</span><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">LiteLLM gateway</span><span class="chip">OPA</span><span class="chip">PostgreSQL + pgvector</span><span class="chip">Pydantic strict</span><span class="chip">HITL</span></div>
 <div class="metrics">
@@ -55,7 +103,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div></section>
 
 <section id="architecture"><div class="wrap">
-<div class="head"><h2>Preferred reference architecture</h2><p>Variant A keeps the agent runtime on-premises and sends only deliberately selected context to an external inference provider. The LLM Gateway is the single egress path; internal systems are reached locally through MCP and policy enforcement.</p></div>
+<div class="head"><h2>Infrastructure and trust boundaries</h2><p><b>Placement view, not execution order.</b> The company agent runtime repeatedly exchanges inference requests and responses through the LLM Gateway while executing authorized MCP and sandbox actions locally. Workspace and sandbox alternatives appear below.</p></div>
 <div class="arch">
 <div class="zone on"><h3>Company / OpenShift</h3><div class="stack">
 <div class="box">Agent API<small>FastAPI · authentication · async jobs</small></div>
@@ -66,7 +114,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="box">Agent Store<small>PostgreSQL · pgvector · episodic memory</small></div>
 <div class="box">Sandbox · Trace Store · Vault<small>Isolation · observability · secrets</small></div>
 </div></div>
-<div class="arrow">→<small>minimized prompts</small></div>
+<div class="arrow">⇄<small>selected context / model replies</small></div>
 <div class="zone dmz"><h3>Controlled egress / DMZ</h3><div class="stack">
 <div class="box">LLM Gateway<small>OpenAI-compatible routing layer</small></div>
 <div class="box">Redaction<small>Secrets · sensitive identifiers · policy</small></div>
@@ -74,19 +122,19 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="box">Reliability<small>Retries · circuit breaker · idempotency · fallback</small></div>
 <div class="box">Audit metadata<small>Outbound request metadata stays on-prem</small></div>
 </div></div>
-<div class="arrow">→<small>mTLS / HTTPS</small></div>
+<div class="arrow">⇄<small>inference calls / replies</small></div>
 <div class="zone ext"><h3>External provider</h3><div class="stack">
 <div class="box">LLM inference<small>EU region where required</small></div>
 <div class="box">Stateless processing<small>Zero retention / no training contract target</small></div>
 <div class="box">Replaceable endpoint<small>Managed API or rented GPU + vLLM</small></div>
 </div></div>
 </div>
-<div class="callout"><b>Boundary rule:</b> repositories, checkpoints, memory, RAG indexes, traces, secrets and tool credentials stay on-premises. Only selected prompt context and model completions cross the external boundary in Variant A.</div>
+<div class="callout"><b>Boundary rule:</b> repositories, checkpoints, memory, RAG indexes, traces, secrets and tool credentials stay on-premises. Selected prompt context (possibly code snippets or tool results) and completions cross the approved inference boundary. <a href="#prompt-flow">See the actual prompt-to-result process ↑</a></div>
 </div></section>
 
 
 <section id="openshell"><div class="wrap">
-<div class="head"><h2><a href="https://docs.nvidia.com/openshell/latest/about/overview">NVIDIA OpenShell</a> — optional platform layer</h2><p>OpenShell is <b>not a prerequisite</b>. Evaluate it either as an integrated Kubernetes workspace + agent sandbox (variant A), or as a separate agent-security layer behind Coder, OpenShift Dev Spaces or Eclipse Che (variant B). Variant C uses Kubernetes-native agent isolation instead. The external inference strategy remains unchanged.</p></div>
+<div class="head"><h2><a href="https://docs.nvidia.com/openshell/latest/about/overview">NVIDIA OpenShell</a> — optional platform layer</h2><p><b>Deployment/security view, not execution order.</b> OpenShell is <b>not required</b>: evaluate its integrated workspace + sandbox (A), a separate agent-security layer behind Coder, OpenShift Dev Spaces or Eclipse Che (B), or Kubernetes-native isolation instead (C). Every option follows the same <a href="#prompt-flow">LLM-driven task loop</a>.</p></div>
 
 <div class="grid g3">
 <div class="card"><div class="kicker">Control plane</div><h3>OpenShell Gateway</h3><p>Owns sandbox lifecycle, policy and settings delivery, provider configuration, authorization and inference routing.</p></div>
@@ -126,14 +174,14 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="box">Internal capabilities<small>GitLab · package registry · DB · knowledge · CI/test tools</small></div>
 <div class="box">Optional local inference<small>vLLM for smaller / bounded workloads where GPU capacity exists</small></div>
 </div></div>
-<div class="arrow">→<small>approved inference only</small></div>
+<div class="arrow">⇄<small>approved calls / replies</small></div>
 <div class="zone dmz"><h3>Controlled egress</h3><div class="stack">
 <div class="box">OpenShell inference routing<small>Approved endpoint and provider profile only</small></div>
 <div class="box">Provider credentials<small>Kept outside the agent and injected only for permitted destinations</small></div>
 <div class="box">Network policy<small>Deny by default · explicit destinations, ports and request rules</small></div>
 <div class="box">Optional enterprise LLM gateway<small>Additional redaction · quotas · fallback · cost control · audit</small></div>
 </div></div>
-<div class="arrow">→<small>HTTPS / provider API</small></div>
+<div class="arrow">⇄<small>inference / model replies</small></div>
 <div class="zone ext"><h3>Heavy inference providers</h3><div class="stack">
 <div class="box">Koyeb<small>Hosted inference / rented GPU + vLLM where appropriate</small></div>
 <div class="box">Mistral<small>Managed enterprise inference</small></div>
@@ -173,7 +221,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 
 
 <section id="dev-environments"><div class="wrap">
-<div class="head"><h2>Remote Development Platform</h2><p><b>Architecture evaluation — no vendor selected.</b> Company-managed Kubernetes / OpenShift workspaces provide IDE access, lifecycle, persistence and developer tools. OpenShell is optional: it can be an integrated workspace or a separate agent security layer. A Kubernetes-native path requires no OpenShell.</p></div>
+<div class="head"><h2>Remote Development Platform</h2><p><b>Implementation alternatives — no vendor selected.</b> These options describe <i>where</i> workspaces and sandboxes run, not <i>when</i> the LLM is called. All use the same <a href="#prompt-flow">Prompt-to-Result loop</a>. Coder, OpenShift Dev Spaces and Eclipse Che remain candidates; OpenShell is optional.</p></div>
 
 <div class="grid g3">
 <div class="card"><div class="kicker">Workspace platform · candidate 1</div><h3><a href="https://coder.com/docs/user-guides">Coder</a></h3><p>Self-hosted workspace management: templates, VS Code access, CLI/API, scheduling and lifecycle. Evaluate Dev Containers, OpenShift SCC, non-root builds, policies, licensing and operational ownership.</p></div>
@@ -236,7 +284,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div></section>
 
 <section id="c4"><div class="wrap">
-<div class="head"><h2>C4 architecture model</h2><p>The reference C4 views preserve the company-controlled trust boundary. The remote-workspace extension adds three alternatives: integrated OpenShell, Remote Development Platform plus OpenShell, or Remote Development Platform plus Kubernetes-native agent isolation.</p></div>
+<div class="head"><h2>C4 architecture model</h2><p><b>Structural views, not execution order.</b> These show components, interfaces and trust boundaries. The actual repeated agent/LLM/tool loop is the <a href="#prompt-flow">Prompt-to-Result Workflow</a> above. Alternatives: integrated OpenShell; Remote Development Platform + OpenShell; or Remote Development Platform + Kubernetes-native sandbox.</p></div>
 
 <div class="c4-grid">
 
@@ -250,7 +298,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="c4-boundary-title">Company · On-Prem</div>
 <div class="c4-node primary"><b>Coding Agent Platform</b><small>Orchestration, context, tools, policy</small></div>
 </div>
-<div class="c4-arrow">→<small>selected prompts</small></div>
+<div class="c4-arrow">⇄<small>context / replies</small></div>
 <div class="c4-node external"><b>Inference Provider</b><small>EU · ZDR / no training target</small></div>
 </div>
 <div class="c4-row" style="margin-top:14px">
@@ -284,9 +332,9 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div>
 <div class="c4-row" style="min-width:0;margin-top:14px">
 <div class="c4-node primary"><b>Agent Runtime</b><small>Context + state</small></div>
-<div class="c4-arrow">→<small>prompts</small></div>
+<div class="c4-arrow">⇄<small>repeated requests / replies</small></div>
 <div class="c4-boundary dmz"><div class="c4-boundary-title">DMZ</div><div class="c4-node"><b>LLM Gateway</b><small>LiteLLM · redaction · budgets · routing</small></div></div>
-<div class="c4-arrow">→<small>mTLS</small></div>
+<div class="c4-arrow">⇄<small>model responses</small></div>
 <div class="c4-node external"><b>LLM Endpoint</b><small>External inference</small></div>
 </div>
 </div>
@@ -332,7 +380,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="c4-node"><b>Sandbox Workers</b><small>Ephemeral restricted execution</small></div>
 </div>
 </div>
-<div class="c4-arrow">→<small>prompts only</small></div>
+<div class="c4-arrow">⇄<small>model requests / replies</small></div>
 <div class="c4-boundary dmz">
 <div class="c4-boundary-title">Company · DMZ</div>
 <div class="c4-col">
@@ -340,7 +388,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="c4-node"><b>Egress Firewall</b><small>Only approved inference endpoints</small></div>
 </div>
 </div>
-<div class="c4-arrow">→<small>mTLS</small></div>
+<div class="c4-arrow">⇄<small>inference calls / replies</small></div>
 <div class="c4-boundary external">
 <div class="c4-boundary-title">Provider · EU</div>
 <div class="c4-node external"><b>LLM Service</b><small>Stateless inference target</small></div>

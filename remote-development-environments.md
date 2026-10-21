@@ -4,6 +4,36 @@
 
 **Project website:** [Coding Agent — GitHub Page](https://ghinta.github.io/coding-agent/)
 
+## Prompt-to-Result Workflow (shared by all workspace options)
+
+**A developer prompt starts the task.** The company-run agent invokes the external LLM early and, if needed, repeatedly. The LLM proposes tool calls, diagnoses and code changes, while the local runtime performs authorization, Knowledge Base retrieval, MCP actions, code execution, tests and verification. The external model never directly connects to internal tools.
+
+```mermaid
+flowchart TB
+    DEV["Developer prompt / VS Code"]
+    subgraph LOCAL["Company-managed infrastructure"]
+        RT["Agent API + Runtime / Orchestrator"]
+        GW["LLM Gateway / approved egress"]
+        MCP["MCP Gateway + Policy"]
+        KB["Knowledge Base / RAG / GitLab / CI"]
+        SB["Isolated agent sandbox / tests"]
+        OUT["Verified diff / test report"]
+    end
+    LLM["External LLM / planning + decisions"]
+    DEV -->|"Goal"| RT
+    RT <-->|"Selected context / model decisions - repeat"| GW
+    GW <-->|"Inference request / response"| LLM
+    RT <-->|"Tool request / evidence"| MCP
+    MCP <-->|"Scoped reads / results"| KB
+    RT <-->|"Approved edits / test evidence"| SB
+    RT -->|"Verified final result"| OUT
+    OUT --> DEV
+```
+
+**Loop:** `Runtime → Gateway → LLM → Gateway → Runtime → authorized tool/sandbox action → Runtime`, repeated with new observations until verified, stopped or awaiting approval. An allowed local context prefetch may occur before the first LLM call. See the [full sequence](remote-inference-agent-on-prem.md#prompt-to-result-workflow).
+
+**Data boundary:** repositories, internal Knowledge Base, memory, credentials, audit data and tool execution stay under company control. **Selected** snippets and tool outputs may be processed externally in inference requests, subject to redaction, minimization and contracts.
+
 ## Goals and constraints
 
 - Remote developer workspaces on **company-managed Kubernetes / OpenShift** (on-premises or company-controlled infrastructure), accessible from **VS Code** and/or a supported browser IDE.
@@ -39,6 +69,8 @@
 
 ### Proposed deployment and trust boundaries
 
+**This is a deployment/options view, not processing order.** Patterns A/B/C are alternatives (never consecutive processing steps). The inference connection carries both requests and responses repeatedly, as shown above.
+
 ```mermaid
 flowchart TB
     dev["Developer<br/>VS Code / browser IDE"]
@@ -65,15 +97,15 @@ flowchart TB
     workspace --> agentApi
     agentApi -->|"B"| openshell
     agentApi -->|"C"| native
-    integrated -->|"authorized tools"| mcp
-    openshell -->|"authorized tools"| mcp
-    native -->|"authorized tools"| mcp
-    mcp --> kb
-    mcp --> systems
-    integrated --> llmgw
-    openshell --> llmgw
-    native --> llmgw
-    llmgw -->|"minimized prompts"| llm
+    integrated <-->|"authorized tools / results"| mcp
+    openshell <-->|"authorized tools / results"| mcp
+    native <-->|"authorized tools / results"| mcp
+    mcp <--> kb
+    mcp <--> systems
+    integrated <-->|"repeated model calls / responses"| llmgw
+    openshell <-->|"repeated model calls / responses"| llmgw
+    native <-->|"repeated model calls / responses"| llmgw
+    llmgw <-->|"minimized requests / model replies"| llm
 ```
 
 **Diagram note:** Routes A, B and C are alternatives — not a mandatory chain. The general agent API/orchestration shown for B/C may also complement A when needed. In B/C, the interactive developer workspace **must not** be the untrusted agent's security boundary. OpenShell integration with each Remote Development Platform is a PoC requirement, not a proven plug-and-play feature.

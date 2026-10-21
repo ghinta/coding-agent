@@ -1,5 +1,7 @@
 # Agentic AI: Workflows
 
+Start with the [Prompt-to-Result Workflow](README.md#prompt-to-result-workflow) or its [detailed request/response sequence](remote-inference-agent-on-prem.md#prompt-to-result-workflow): **developer prompt → repeated external LLM decisions → authorized on-prem Knowledge Base / MCP / sandbox actions → verified result**. C4/deployment drawings describe where components run, not execution order.
+
 This document focuses on **workflows that benefit from an agentic architecture** rather than on AI agents as an abstract concept.
 
 The main advantage of LangGraph-style orchestration is not simply that an LLM can call tools. The advantage is that a workflow can **keep state, branch dynamically, run tasks in parallel, repeat steps, pause for human approval, and resume after failures**.
