@@ -33,7 +33,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="badge"><span class="dot"></span>Architecture evaluation · confidential software engineering</div>
 <h1>Enterprise coding agents without giving up control of code, tools, or state.</h1>
 <p class="lead">The project defines an agentic coding platform for confidential repositories and internal systems. The preferred architecture keeps the complete agent harness on-premises and treats the external LLM as a replaceable, stateless inference service.</p>
-<div class="chips"><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">LiteLLM gateway</span><span class="chip">OPA</span><span class="chip">PostgreSQL + pgvector</span><span class="chip">Pydantic strict</span><span class="chip">HITL</span></div>
+<div class="chips"><span class="chip">Remote Development Platform</span><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">LiteLLM gateway</span><span class="chip">OPA</span><span class="chip">PostgreSQL + pgvector</span><span class="chip">Pydantic strict</span><span class="chip">HITL</span></div>
 <div class="metrics">
 <div class="metric"><b>On-prem first</b><span>Agent logic, memory, state, traces, credentials and tool execution stay inside the company boundary.</span></div>
 <div class="metric"><b>Provider-agnostic</b><span>The external model sits behind one compatible gateway and can be replaced without redesigning the platform.</span></div>
@@ -86,7 +86,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 
 
 <section id="openshell"><div class="wrap">
-<div class="head"><h2><a href="https://docs.nvidia.com/openshell/latest/about/overview">NVIDIA OpenShell</a> — ready-to-go option</h2><p>OpenShell can provide the secured on-prem execution boundary instead of us building every sandbox, credential and egress control ourselves. Our inference strategy does not change: local vLLM is optional and capacity-limited; heavy workloads continue to use approved external providers such as Koyeb, Mistral, Azure or other enterprise endpoints.</p></div>
+<div class="head"><h2><a href="https://docs.nvidia.com/openshell/latest/about/overview">NVIDIA OpenShell</a> — optional platform layer</h2><p>OpenShell is <b>not a prerequisite</b>. Evaluate it either as an integrated Kubernetes workspace + agent sandbox (variant A), or as a separate agent-security layer behind Coder, OpenShift Dev Spaces or Eclipse Che (variant B). Variant C uses Kubernetes-native agent isolation instead. The external inference strategy remains unchanged.</p></div>
 
 <div class="grid g3">
 <div class="card"><div class="kicker">Control plane</div><h3>OpenShell Gateway</h3><p>Owns sandbox lifecycle, policy and settings delivery, provider configuration, authorization and inference routing.</p></div>
@@ -168,69 +168,75 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <div class="card"><div class="kicker">Potentially replace</div><h3>Execution security plumbing</h3><p>Custom sandbox lifecycle, low-level process isolation, much of network mediation, provider credential injection and agent-specific runtime policy can move to OpenShell.</p></div>
 </div>
 
-<div class="callout"><b>Evaluation target:</b> OpenShell is a ready-to-go security/runtime option for Variant A, not a new cloud architecture. Preferred operating model: <b>agent runtime on-prem + external inference for heavy workloads</b>, with optional local vLLM only where capacity and model size make it practical.</div>
+<div class="callout"><b>Optionality rule:</b> OpenShell may provide both workspace + agent sandbox (A), or an agent sandbox behind a separate Remote Development Platform (B). With (C), a Kubernetes-native sandbox implements the security requirements without OpenShell. These paths keep the same approved LLM gateway, RAG and MCP interfaces; select only after evaluating their security and developer experience.</div>
 </div></section>
 
 
 <section id="dev-environments"><div class="wrap">
-<div class="head"><h2>Remote development environments</h2><p><b>Proposal — evaluation only.</b> Remote VS Code workspaces run on company-managed Kubernetes / OpenShift. Evaluate <b>Coder</b> for workspace provisioning and <b>Jetify Devbox</b> for reproducible tools and Dev Container generation. They cover different layers and may be combined. No product or implementation has been selected.</p></div>
+<div class="head"><h2>Remote Development Platform</h2><p><b>Architecture evaluation — no vendor selected.</b> Company-managed Kubernetes / OpenShift workspaces provide IDE access, lifecycle, persistence and developer tools. OpenShell is optional: it can be an integrated workspace or a separate agent security layer. A Kubernetes-native path requires no OpenShell.</p></div>
 
-<div class="grid g2">
-<div class="card"><div class="kicker">Evaluate · workspace control plane</div><h3><a href="https://coder.com/docs/user-guides/devcontainers">Coder</a></h3><p>Self-hosted Kubernetes workspace templates, connection, lifecycle and governance. Evaluate OpenShift builds, VS Code/SSH, authentication, RBAC, storage, operations and licensing.</p></div>
-<div class="card"><div class="kicker">Evaluate · project toolchain</div><h3><a href="https://www.jetify.com/devbox">Jetify Devbox</a></h3><p>Nix-backed reproducible shells, <code>devbox.json</code>, <code>devbox.lock</code> and <a href="https://www.jetify.com/blog/creating-nix-powered-docker-containers-with-devbox">Dev Container generation</a>. It does not provision Kubernetes workspace pods or replace a remote IDE workspace manager.</p></div>
+<div class="grid g3">
+<div class="card"><div class="kicker">Workspace platform · candidate 1</div><h3><a href="https://coder.com/docs/user-guides">Coder</a></h3><p>Self-hosted workspace management: templates, VS Code access, CLI/API, scheduling and lifecycle. Evaluate Dev Containers, OpenShift SCC, non-root builds, policies, licensing and operational ownership.</p></div>
+<div class="card"><div class="kicker">Workspace platform · candidate 2</div><h3><a href="https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.27/">Red Hat OpenShift Dev Spaces</a></h3><p>Red Hat-supported OpenShift cloud development workspaces. Devfile-driven environments and DevWorkspace Operator. Validate supported OpenShift versions, IDE access, security and support requirements.</p></div>
+<div class="card"><div class="kicker">Workspace platform · candidate 3</div><h3><a href="https://eclipse.dev/che/">Eclipse Che</a></h3><p>Upstream Kubernetes cloud development environments with a dashboard, Devfiles and DevWorkspace Operator. Evaluate independently for operation, support, upgrades and governance.</p></div>
+</div>
+<div class="callout"><b>Product relationship:</b> Red Hat OpenShift Dev Spaces is built on Eclipse Che. These are separate offerings, but not independent underlying technical stacks. <b>Remote Development Platform</b> groups all three candidates under one replaceable architectural component.</div>
+
+<div class="head" style="margin-top:42px"><h2>Three deployment patterns</h2><p>Workspace management and agent execution are separate architecture concerns. All three options must preserve company-controlled code, memory, Knowledge Base and tooling, with only approved LLM inference crossing the outbound gateway.</p></div>
+<div class="grid g3">
+<div class="card"><div class="kicker">Variant A · integrated</div><h3>OpenShell only</h3><p>OpenShell Kubernetes workspaces and isolated agent sandboxes, including an IDE connection. Evaluate whether its developer UX, persistence and governance meet the workspace requirements without a separate workspace platform.</p></div>
+<div class="card"><div class="kicker">Variant B · modular</div><h3>Remote Development Platform + OpenShell</h3><p>Coder, OpenShift Dev Spaces or Eclipse Che provides the developer workspace. A separate OpenShell sandbox secures agent execution. Integration is a PoC task, not an assumed feature.</p></div>
+<div class="card"><div class="kicker">Variant C · Kubernetes-native</div><h3>Remote Development Platform + native sandbox</h3><p>The same workspace candidates, with separately restricted Kubernetes Pods/Jobs, SCC, RBAC, enforced NetworkPolicy, policy/secret brokers and optional Kata Containers. OpenShell is not required.</p></div>
 </div>
 
-<div class="callout"><b>Comparison rule:</b> these are <b>not</b> interchangeable workspace managers. Evaluate Coder-only provisioning, Devbox-based toolchains with a separate (TBD) Kubernetes provisioner, and a potential <b>Coder + Devbox</b> combination. The production architecture remains undecided.</div>
-
 <div class="c4-view" style="margin-top:20px">
-<div class="c4-title"><div><h3>Proposed workspace and agent separation</h3><p>The workspace manager, reproducible project environment and restricted agent sandbox each have separate responsibilities.</p></div><span class="c4-level">Architecture proposal</span></div>
+<div class="c4-title"><div><h3>Proposed logical separation</h3><p>Alternative workspace paths connect to the same internal services. Agents are untrusted workloads; authorized MCP tools expose capabilities rather than raw credentials.</p></div><span class="c4-level">Architecture proposal</span></div>
 <div class="c4-canvas">
 <div class="c4-row">
-<div class="c4-node person"><b>Developer</b><small>VS Code / SSH</small></div>
-<div class="c4-arrow">↔<small>secure IDE</small></div>
+<div class="c4-node person"><b>Developer</b><small>VS Code / browser IDE</small></div>
+<div class="c4-arrow">↔<small>authenticated IDE</small></div>
 <div class="c4-boundary onprem">
 <div class="c4-boundary-title">Company · Kubernetes / OpenShift</div>
 <div class="c4-col">
-<div class="c4-node primary"><b>Workspace Lifecycle</b><small>Coder or Kubernetes provisioner TBD</small></div>
-<div class="c4-node"><b>Developer Workspace Pod</b><small>repo · IDE backend · PVC</small></div>
-<div class="c4-node"><b>Optional Jetify Devbox</b><small>Nix packages · scripts · devcontainer export</small></div>
-<div class="c4-node primary"><b>Agent API → OpenShell</b><small>separate restricted sandbox pod</small></div>
-</div>
-</div>
-<div class="c4-arrow">↔<small>authorized APIs</small></div>
+<div class="c4-node primary"><b>A · OpenShell integrated</b><small>workspace + agent sandbox</small></div>
+<div class="c4-node primary"><b>B/C · Remote Development Platform</b><small>Coder / Dev Spaces / Eclipse Che</small></div>
+<div class="c4-node"><b>Developer Workspace</b><small>Dev Container / Devfile · PVC</small></div>
+<div class="c4-node"><b>B · OpenShell Sandbox</b><small>separate agent security boundary</small></div>
+<div class="c4-node"><b>C · Kubernetes-native Sandbox</b><small>dedicated Pods / Jobs · optional Kata</small></div>
+</div></div>
+<div class="c4-arrow">↔<small>scoped tools</small></div>
 <div class="c4-boundary onprem">
-<div class="c4-boundary-title">Internal capabilities</div>
+<div class="c4-boundary-title">Shared internal capabilities</div>
 <div class="c4-col">
-<div class="c4-node store"><b>Knowledge Base</b><small>RAG · memory API</small></div>
+<div class="c4-node store"><b>Knowledge Base / RAG</b><small>project-scoped retrieval</small></div>
 <div class="c4-node"><b>MCP Gateway</b><small>GitLab · CI · DB · tests</small></div>
-<div class="c4-node"><b>LLM Gateway</b><small>approved inference egress</small></div>
+<div class="c4-node"><b>LLM Gateway</b><small>controlled inference egress</small></div>
+</div></div>
 </div>
-</div>
-</div>
-</div>
-</div>
+</div></div>
 
-<div class="head" style="margin-top:34px"><h2>Workspace access and trust boundaries</h2><p>Every evaluated design must provide the required Knowledge Base and tools through project-scoped APIs. Unrestricted credentials, production writes and direct database access remain excluded.</p></div>
+<div class="head" style="margin-top:36px"><h2>Independent architecture layers</h2><p>No workspace or sandbox product should dictate the orchestration, internal tools or LLM provider. Devbox remains an optional development dependency tool, not a Remote Development Platform.</p></div>
 <div class="table"><table>
-<thead><tr><th>Capability</th><th>Planned access</th><th>Boundary to validate</th></tr></thead>
+<thead><tr><th>Layer</th><th>Candidate or approach</th><th>Evaluation target</th></tr></thead>
 <tbody>
-<tr><td><b>Knowledge Base + memory</b></td><td>Internal retrieval and agent APIs</td><td>Project-scoped authorization; no direct PostgreSQL credentials</td></tr>
-<tr><td><b>GitLab + registry + CI</b></td><td>Approved workspace endpoints / typed MCP tools</td><td>Least privilege, scoped identity and audit</td></tr>
-<tr><td><b>Agent tasks</b></td><td>Agent API → OpenShell Gateway → separate sandbox</td><td>Independent identities, policies, isolation and restricted mounts</td></tr>
-<tr><td><b>Devbox packages</b></td><td>Approved prebuilt images or internal Nix package caches</td><td>Validate external Nixhub/cache dependencies; no arbitrary internet</td></tr>
-<tr><td><b>Inference</b></td><td>Existing LLM Gateway</td><td>Redaction and approved egress; code and state remain company-controlled</td></tr>
+<tr><td><b>Remote Development Platform</b></td><td>Coder / OpenShift Dev Spaces / Eclipse Che; bypassed for A</td><td>Provisioning, VS Code or browser IDE, lifecycle, SSO/RBAC, persistence</td></tr>
+<tr><td><b>Agent Sandbox &amp; Security</b></td><td>OpenShell OR Kubernetes-native (SCC, NetworkPolicy, RBAC, optional Kata)</td><td>Untrusted process, filesystem, identity, credential and network isolation</td></tr>
+<tr><td><b>Agent Orchestration</b></td><td>LangGraph or equivalent agent runtime</td><td>Planning, state, supervisor, verification, HITL, independent APIs</td></tr>
+<tr><td><b>Development Environment</b></td><td>Dev Containers / Devfiles; optionally Jetify Devbox</td><td>Reproducibility and image/build policy; Devbox only if beneficial</td></tr>
+<tr><td><b>Knowledge Base &amp; Tooling</b></td><td>Internal RAG, MCP, GitLab, CI/CD, approved APIs</td><td>Full authorized access, least privilege and audit</td></tr>
+<tr><td><b>LLM Inference</b></td><td>Approved providers behind LLM Gateway</td><td>External inference only through redacted, budgeted egress</td></tr>
 </tbody></table></div>
 
 <div class="grid g3" style="margin-top:20px">
-<div class="card"><div class="kicker">Evaluate</div><h3>Coder / Devbox / combination</h3><p>Same reference project and acceptance tests. Compare workspace lifecycle, reproducibility, secure VS Code access, governance, OpenShift compatibility and total operating cost.</p></div>
-<div class="card"><div class="kicker">Verify</div><h3>OpenShell + Kubernetes</h3><p>Separate agent workload, default-deny networking, enforced ingress/egress NetworkPolicy, SCC/non-root compatibility and scoped KB/MCP access.</p></div>
-<div class="card"><div class="kicker">Defer</div><h3>Unified CLI</h3><p>First assess Coder's workspace CLI and Devbox's project-environment CLI. They expose different functions. Build a company facade only if an actual gap is demonstrated.</p></div>
+<div class="card"><div class="kicker">Security test</div><h3>OpenShell is optional</h3><p>Variant C must prove an independent native agent isolation boundary. A Pod or NetworkPolicy alone is not equivalent to OpenShell process and credential controls.</p></div>
+<div class="card"><div class="kicker">Developer workflow</div><h3>KB + MCP first</h3><p>All variants must open the workspace, clone GitLab code, access internal knowledge, call scoped tools, run tests and persist changes across workspace restart.</p></div>
+<div class="card"><div class="kicker">Deferred</div><h3>Jetify Devbox + company CLI</h3><p>Evaluate Devbox only for a concrete reproducibility advantage. Prefer existing workspace CLI/IDE flows; build no custom client during architecture planning.</p></div>
 </div>
-<div class="callout"><b>Evaluation boundary:</b> only company-managed Kubernetes/OpenShift workspaces are in scope. Neither third-party PaaS-hosted devcontainers nor Jetify-hosted Devspace are part of this plan. <a href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md">Read the updated evaluation plan →</a></div>
+<div class="callout"><b>Scope:</b> all developer workspaces remain on company-managed Kubernetes/OpenShift. No third-party PaaS-hosted devcontainers. Three variants will be compared before any technology decision. <a href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md">Read the complete remote development evaluation plan →</a></div>
 </div></section>
 
 <section id="c4"><div class="wrap">
-<div class="head"><h2>C4 architecture model</h2><p>The reference C4 views preserve the on-prem trust boundary; the remote-workspace deployment view evaluates Coder provisioning, Devbox project environments and their potential combination, without making a selection.</p></div>
+<div class="head"><h2>C4 architecture model</h2><p>The reference C4 views preserve the company-controlled trust boundary. The remote-workspace extension adds three alternatives: integrated OpenShell, Remote Development Platform plus OpenShell, or Remote Development Platform plus Kubernetes-native agent isolation.</p></div>
 
 <div class="c4-grid">
 
@@ -345,33 +351,32 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div>
 
 <div class="c4-view">
-<div class="c4-title"><div><h3>Remote Development Workspace Extension</h3><p>Proposed Kubernetes workspace lifecycle, optional Devbox environment definition and separate OpenShell agent execution, with shared internal capabilities.</p></div><span class="c4-level">C4 · Deployment (proposed)</span></div>
+<div class="c4-title"><div><h3>Remote Development Workspace Extension</h3><p>Three proposed deployment paths with a replaceable Remote Development Platform and optional OpenShell.</p></div><span class="c4-level">C4 · Deployment (proposed)</span></div>
 <div class="c4-canvas">
 <div class="c4-row">
-<div class="c4-node person"><b>Developer</b><small>VS Code · secure SSH</small></div>
-<div class="c4-arrow">↔<small>remote IDE</small></div>
+<div class="c4-node person"><b>Developer</b><small>VS Code / browser IDE</small></div>
+<div class="c4-arrow">↔<small>IDE session</small></div>
 <div class="c4-boundary onprem">
-<div class="c4-boundary-title">Company-managed Kubernetes / OpenShift</div>
+<div class="c4-boundary-title">Company · Kubernetes / OpenShift</div>
 <div class="c4-col">
-<div class="c4-node primary"><b>Workspace Lifecycle</b><small>Coder or other on-prem provisioner TBD</small></div>
-<div class="c4-node"><b>Developer Workspace Pod</b><small>Dev Container · repo · PVC</small></div>
-<div class="c4-node"><b>Optional Jetify Devbox</b><small>devbox.json · devbox.lock · Nix tooling</small></div>
-<div class="c4-node"><b>Agent API + OpenShell Gateway</b><small>sandbox lifecycle / security policy</small></div>
-<div class="c4-node"><b>Isolated Agent Sandbox Pod</b><small>separate identity and network boundary</small></div>
-</div>
-</div>
-<div class="c4-arrow">↔<small>typed APIs</small></div>
+<div class="c4-node primary"><b>A · OpenShell integrated</b><small>workspace + sandbox in one stack</small></div>
+<div class="c4-node primary"><b>B / C · Remote Development Platform</b><small>Coder · OpenShift Dev Spaces · Eclipse Che</small></div>
+<div class="c4-node"><b>Developer Workspace Pod</b><small>Dev Container / Devfile · PVC</small></div>
+<div class="c4-node"><b>Agent API / Orchestrator</b><small>workflow state · verifier · HITL</small></div>
+<div class="c4-node"><b>B · OpenShell Sandbox</b><small>separate policy-driven agent workload</small></div>
+<div class="c4-node"><b>C · Kubernetes-native Sandbox</b><small>restricted Pods / Jobs · optional Kata</small></div>
+</div></div>
+<div class="c4-arrow">↔<small>project APIs</small></div>
 <div class="c4-boundary onprem">
 <div class="c4-boundary-title">Company services</div>
 <div class="c4-col">
-<div class="c4-node store"><b>Knowledge Base + Memory</b><small>RAG + scoped API</small></div>
-<div class="c4-node"><b>MCP Tool Gateway</b><small>GitLab · CI · registry · tests</small></div>
-<div class="c4-node"><b>LLM Gateway</b><small>only approved inference egress</small></div>
+<div class="c4-node store"><b>Knowledge Base / Memory</b><small>RAG · project-scoped API</small></div>
+<div class="c4-node"><b>MCP Gateway</b><small>GitLab · CI · DB · tests</small></div>
+<div class="c4-node"><b>LLM Gateway</b><small>approved external inference egress</small></div>
+</div></div>
 </div>
 </div>
-</div>
-</div>
-<div class="c4-legend"><span><i class="legend-dot legend-green"></i>Company-controlled workspace and state</span><span><i class="legend-dot legend-blue"></i>Separate developer and agent workloads</span><span><i class="legend-dot legend-amber"></i>External inference through controlled gateway</span></div>
+<div class="c4-legend"><span><i class="legend-dot legend-green"></i>Developer and agent data remain company-controlled</span><span><i class="legend-dot legend-blue"></i>A / B / C are alternatives</span><span><i class="legend-dot legend-amber"></i>LLM egress remains controlled</span></div>
 </div>
 
 </div>
@@ -450,10 +455,10 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 </div></section>
 
 <section id="roadmap"><div class="wrap">
-<div class="head"><h2>Proposed implementation path</h2><p>Architecture planning only: no workspace platform selected or deployed. Evaluate Coder workspace management and Jetify Devbox project tooling, separately and together, before any implementation decision; increase autonomy only after evidence, observability and policy controls are proven.</p></div>
+<div class="head"><h2>Proposed implementation path</h2><p>Architecture planning only. Evaluate integrated OpenShell, the Remote Development Platform candidates and both agent-security approaches before implementation. OpenShell and Devbox remain optional. Increase autonomy only after security, observability and verification are proven.</p></div>
 <div class="timeline">
 <div class="phase"><strong>Phase 0</strong><div><h3>Architecture and contracts</h3><p>Finalize provider requirements, data classes, trust boundaries, tool contracts, identity model and ownership.</p></div></div>
-<div class="phase"><strong>Phase 0a</strong><div><h3>Remote Workspaces: Coder and Devbox</h3><p>Evaluate Coder for workspace lifecycle and Jetify Devbox for reproducible project tooling, plus a possible combination. Test company-managed Kubernetes / OpenShift, VS Code, KB/MCP, OpenShell, package mirrors, security and complete operating cost. Do not select a product yet.</p></div></div>
+<div class="phase"><strong>Phase 0a</strong><div><h3>Remote Development Platforms &amp; agent isolation</h3><p>Compare A: OpenShell integrated, B: Coder / OpenShift Dev Spaces / Eclipse Che + OpenShell, and C: the same Remote Development Platform candidates + Kubernetes-native sandbox. Verify KB/MCP access, developer UX, OpenShift policies, costs and exit strategy; Devbox remains optional.</p></div></div>
 <div class="phase"><strong>Phase 1</strong><div><h3>Read-only coding assistant</h3><p>Repository inspection, search, CI/log analysis and internal knowledge access. No write-capable tools.</p></div></div>
 <div class="phase"><strong>Phase 2</strong><div><h3>Verified engineering workflows</h3><p>Feature planning, sandboxed code changes, tests, selective PR review, verifier and complete tracing.</p></div></div>
 <div class="phase"><strong>Phase 3</strong><div><h3>Controlled write actions</h3><p>Feature branches and merge-request creation behind OPA policies, approval gates and project-level RBAC.</p></div></div>
@@ -464,7 +469,7 @@ footer{border-top:1px solid rgba(154,169,187,.13);padding:44px 0 64px;color:var(
 <section><div class="wrap">
 <div class="head"><h2>Project documents</h2><p>The page is the executive overview. The repository documents contain the detailed architecture and research material.</p></div>
 <div class="docs">
-<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md"><b>Remote development — evaluation</b><span>Coder workspace management and Jetify Devbox toolchains on Kubernetes/OpenShift, including combined evaluation, agent isolation, KB/MCP and deferred CLI.</span></a>
+<a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-development-environments.md"><b>Remote development — evaluation</b><span>Coder / OpenShift Dev Spaces / Eclipse Che, optional OpenShell or Kubernetes-native sandbox, internal KB/MCP and optional Devbox.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/remote-inference-agent-on-prem.md"><b>Remote inference — agent on-prem</b><span>Preferred architecture, C4 views, trust zones, gateway, tools and data classes.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/cloud-agent-cloud-llm"><b>Cloud agent + cloud LLM</b><span>Alternative deployment with an on-prem MCP Gateway as the primary boundary.</span></a>
 <a class="doc" href="https://github.com/ghinta/coding-agent/blob/main/agentic-workflows.md"><b>Agentic workflows</b><span>Feature delivery, PR review, CI/CD, security, incidents, data and HITL patterns.</span></a>
